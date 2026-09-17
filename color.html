@@ -2,127 +2,116 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
-<title>7组配色的4套方案</title>
+<title>7组配色 · 横条排列</title>
 <style>
   * { box-sizing: border-box; }
   body {
     font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
     background: #f4f5f7;
     margin: 0;
-    padding: 40px 20px;
+    padding: 40px 24px;
     color: #222;
   }
-  h1 { text-align: center; font-size: 26px; margin-bottom: 8px; }
-  .sub { text-align: center; color: #888; margin-bottom: 40px; font-size: 14px; }
+  h1 { text-align: center; font-size: 24px; margin: 0 0 6px; }
+  .sub { text-align: center; color: #888; font-size: 13px; margin: 0 0 38px; }
 
   .section {
-    max-width: 1180px;
-    margin: 0 auto 50px;
+    max-width: 1100px;
+    margin: 0 auto 36px;
     background: #fff;
-    border-radius: 18px;
-    padding: 28px 30px 34px;
-    box-shadow: 0 6px 24px rgba(0,0,0,.06);
+    border-radius: 16px;
+    padding: 22px 26px 28px;
+    box-shadow: 0 6px 22px rgba(0,0,0,.06);
   }
-  .section h2 {
-    font-size: 19px;
-    margin: 0 0 6px;
+  .section h2 { font-size: 17px; margin: 0 0 4px; }
+  .desc { color: #888; font-size: 12.5px; margin: 0 0 16px; }
+
+  .bar {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    width: 100%;
+    height: 92px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0,0,0,.12);
   }
-  .section h2 .dot {
-    width: 12px; height: 12px; border-radius: 50%;
-    background: #4DABF7; display: inline-block;
-  }
-  .desc { color: #888; font-size: 13px; margin: 0 0 22px; }
-
-  .row { display: flex; gap: 14px; flex-wrap: wrap; }
-
-  .card {
-    flex: 1 1 130px;
-    min-width: 120px;
-    height: 150px;
-    border-radius: 14px;
+  .seg {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: #fff;
-    box-shadow: 0 4px 14px rgba(0,0,0,.12);
-    transition: transform .18s ease, box-shadow .18s ease;
+    transition: flex .2s ease;
     cursor: default;
   }
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 22px rgba(0,0,0,.18);
-  }
-  .card .name { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
-  .card .hex  { font-size: 12.5px; opacity: .92; margin-top: 8px; font-family: monospace; }
-  .card .cn   { font-size: 12px; opacity: .8; margin-top: 3px; }
+  .seg:hover { flex: 1.6; }
+  .seg .name { font-size: 17px; font-weight: 700; }
+  .seg .hex  { font-size: 11px; opacity: .9; margin-top: 5px; font-family: monospace; }
+  .seg .cn   { font-size: 11px; opacity: .78; margin-top: 2px; }
 </style>
 </head>
 <body>
 
-<h1>7个组分配色 · 4套方案</h1>
-<p class="sub">A组 ~ G组，每套7色，鼠标悬停可查看效果</p>
+<h1>7个组分配色 · 横条排列</h1>
+<p class="sub">A组 → G组，从左到右；鼠标悬停色段会展开</p>
 
 <!-- 方案1 彩虹 -->
 <div class="section">
-  <h2><span class="dot" style="background:#E74C3C"></span>方案一 · 经典彩虹色</h2>
+  <h2>方案一 · 经典彩虹色</h2>
   <p class="desc">高区分度，适合图表、数据可视化</p>
-  <div class="row">
-    <div class="card" style="background:#E74C3C"><div class="name">A组</div><div class="hex">#E74C3C</div><div class="cn">红</div></div>
-    <div class="card" style="background:#E67E22"><div class="name">B组</div><div class="hex">#E67E22</div><div class="cn">橙</div></div>
-    <div class="card" style="background:#F1C40F;color:#7a6000"><div class="name">C组</div><div class="hex">#F1C40F</div><div class="cn">黄</div></div>
-    <div class="card" style="background:#2ECC71"><div class="name">D组</div><div class="hex">#2ECC71</div><div class="cn">绿</div></div>
-    <div class="card" style="background:#1ABC9C"><div class="name">E组</div><div class="hex">#1ABC9C</div><div class="cn">青</div></div>
-    <div class="card" style="background:#3498DB"><div class="name">F组</div><div class="hex">#3498DB</div><div class="cn">蓝</div></div>
-    <div class="card" style="background:#9B59B6"><div class="name">G组</div><div class="hex">#9B59B6</div><div class="cn">紫</div></div>
+  <div class="bar">
+    <div class="seg" style="background:#E74C3C"><div class="name">A组</div><div class="hex">#E74C3C</div><div class="cn">红</div></div>
+    <div class="seg" style="background:#E67E22"><div class="name">B组</div><div class="hex">#E67E22</div><div class="cn">橙</div></div>
+    <div class="seg" style="background:#F1C40F;color:#7a6000"><div class="name">C组</div><div class="hex">#F1C40F</div><div class="cn">黄</div></div>
+    <div class="seg" style="background:#2ECC71"><div class="name">D组</div><div class="hex">#2ECC71</div><div class="cn">绿</div></div>
+    <div class="seg" style="background:#1ABC9C"><div class="name">E组</div><div class="hex">#1ABC9C</div><div class="cn">青</div></div>
+    <div class="seg" style="background:#3498DB"><div class="name">F组</div><div class="hex">#3498DB</div><div class="cn">蓝</div></div>
+    <div class="seg" style="background:#9B59B6"><div class="name">G组</div><div class="hex">#9B59B6</div><div class="cn">紫</div></div>
   </div>
 </div>
 
 <!-- 方案2 马卡龙 -->
 <div class="section">
-  <h2><span class="dot" style="background:#FF6B6B"></span>方案二 · 柔和马卡龙色</h2>
+  <h2>方案二 · 柔和马卡龙色</h2>
   <p class="desc">清新柔和，适合PPT、UI、海报</p>
-  <div class="row">
-    <div class="card" style="background:#FF6B6B"><div class="name">A组</div><div class="hex">#FF6B6B</div><div class="cn">珊瑚粉</div></div>
-    <div class="card" style="background:#FFA94D"><div class="name">B组</div><div class="hex">#FFA94D</div><div class="cn">蜜桃橙</div></div>
-    <div class="card" style="background:#FFD43B;color:#7a6000"><div class="name">C组</div><div class="hex">#FFD43B</div><div class="cn">柠檬黄</div></div>
-    <div class="card" style="background:#69DB7C;color:#1a5c28"><div class="name">D组</div><div class="hex">#69DB7C</div><div class="cn">薄荷绿</div></div>
-    <div class="card" style="background:#4DABF7"><div class="name">E组</div><div class="hex">#4DABF7</div><div class="cn">天空蓝</div></div>
-    <div class="card" style="background:#9775FA"><div class="name">F组</div><div class="hex">#9775FA</div><div class="cn">薰衣草紫</div></div>
-    <div class="card" style="background:#F783AC"><div class="name">G组</div><div class="hex">#F783AC</div><div class="cn">玫瑰红</div></div>
+  <div class="bar">
+    <div class="seg" style="background:#FF6B6B"><div class="name">A组</div><div class="hex">#FF6B6B</div><div class="cn">珊瑚粉</div></div>
+    <div class="seg" style="background:#FFA94D"><div class="name">B组</div><div class="hex">#FFA94D</div><div class="cn">蜜桃橙</div></div>
+    <div class="seg" style="background:#FFD43B;color:#7a6000"><div class="name">C组</div><div class="hex">#FFD43B</div><div class="cn">柠檬黄</div></div>
+    <div class="seg" style="background:#69DB7C;color:#1a5c28"><div class="name">D组</div><div class="hex">#69DB7C</div><div class="cn">薄荷绿</div></div>
+    <div class="seg" style="background:#4DABF7"><div class="name">E组</div><div class="hex">#4DABF7</div><div class="cn">天空蓝</div></div>
+    <div class="seg" style="background:#9775FA"><div class="name">F组</div><div class="hex">#9775FA</div><div class="cn">薰衣草紫</div></div>
+    <div class="seg" style="background:#F783AC"><div class="name">G组</div><div class="hex">#F783AC</div><div class="cn">玫瑰红</div></div>
   </div>
 </div>
 
 <!-- 方案3 深色专业 -->
 <div class="section">
-  <h2><span class="dot" style="background:#C0392B"></span>方案三 · 深色专业风</h2>
+  <h2>方案三 · 深色专业风</h2>
   <p class="desc">沉稳商务，适合报表、正式场合</p>
-  <div class="row">
-    <div class="card" style="background:#C0392B"><div class="name">A组</div><div class="hex">#C0392B</div><div class="cn">深红</div></div>
-    <div class="card" style="background:#D35400"><div class="name">B组</div><div class="hex">#D35400</div><div class="cn">赭石</div></div>
-    <div class="card" style="background:#7D6608"><div class="name">C组</div><div class="hex">#7D6608</div><div class="cn">橄榄</div></div>
-    <div class="card" style="background:#1E8449"><div class="name">D组</div><div class="hex">#1E8449</div><div class="cn">墨绿</div></div>
-    <div class="card" style="background:#1A5276"><div class="name">E组</div><div class="hex">#1A5276</div><div class="cn">藏青</div></div>
-    <div class="card" style="background:#4A235A"><div class="name">F组</div><div class="hex">#4A235A</div><div class="cn">靛蓝</div></div>
-    <div class="card" style="background:#566573"><div class="name">G组</div><div class="hex">#566573</div><div class="cn">深灰</div></div>
+  <div class="bar">
+    <div class="seg" style="background:#C0392B"><div class="name">A组</div><div class="hex">#C0392B</div><div class="cn">深红</div></div>
+    <div class="seg" style="background:#D35400"><div class="name">B组</div><div class="hex">#D35400</div><div class="cn">赭石</div></div>
+    <div class="seg" style="background:#7D6608"><div class="name">C组</div><div class="hex">#7D6608</div><div class="cn">橄榄</div></div>
+    <div class="seg" style="background:#1E8449"><div class="name">D组</div><div class="hex">#1E8449</div><div class="cn">墨绿</div></div>
+    <div class="seg" style="background:#1A5276"><div class="name">E组</div><div class="hex">#1A5276</div><div class="cn">藏青</div></div>
+    <div class="seg" style="background:#4A235A"><div class="name">F组</div><div class="hex">#4A235A</div><div class="cn">靛蓝</div></div>
+    <div class="seg" style="background:#566573"><div class="name">G组</div><div class="hex">#566573</div><div class="cn">深灰</div></div>
   </div>
 </div>
 
 <!-- 方案4 色盲友好 -->
 <div class="section">
-  <h2><span class="dot" style="background:#0072B2"></span>方案四 · 高对比 / 色盲友好</h2>
+  <h2>方案四 · 高对比 / 色盲友好</h2>
   <p class="desc">Okabe-Ito 调色板，黑白打印、色盲人群也能区分</p>
-  <div class="row">
-    <div class="card" style="background:#000000"><div class="name">A组</div><div class="hex">#000000</div><div class="cn">黑</div></div>
-    <div class="card" style="background:#E69F00"><div class="name">B组</div><div class="hex">#E69F00</div><div class="cn">橙</div></div>
-    <div class="card" style="background:#56B4E9"><div class="name">C组</div><div class="hex">#56B4E9</div><div class="cn">天蓝</div></div>
-    <div class="card" style="background:#009E73"><div class="name">D组</div><div class="hex">#009E73</div><div class="cn">绿</div></div>
-    <div class="card" style="background:#F0E442;color:#6b5f00"><div class="name">E组</div><div class="hex">#F0E442</div><div class="cn">黄</div></div>
-    <div class="card" style="background:#0072B2"><div class="name">F组</div><div class="hex">#0072B2</div><div class="cn">蓝</div></div>
-    <div class="card" style="background:#D55E00"><div class="name">G组</div><div class="hex">#D55E00</div><div class="cn">朱红</div></div>
+  <div class="bar">
+    <div class="seg" style="background:#000000"><div class="name">A组</div><div class="hex">#000000</div><div class="cn">黑</div></div>
+    <div class="seg" style="background:#E69F00"><div class="name">B组</div><div class="hex">#E69F00</div><div class="cn">橙</div></div>
+    <div class="seg" style="background:#56B4E9"><div class="name">C组</div><div class="hex">#56B4E9</div><div class="cn">天蓝</div></div>
+    <div class="seg" style="background:#009E73"><div class="name">D组</div><div class="hex">#009E73</div><div class="cn">绿</div></div>
+    <div class="seg" style="background:#F0E442;color:#6b5f00"><div class="name">E组</div><div class="hex">#F0E442</div><div class="cn">黄</div></div>
+    <div class="seg" style="background:#0072B2"><div class="name">F组</div><div class="hex">#0072B2</div><div class="cn">蓝</div></div>
+    <div class="seg" style="background:#D55E00"><div class="name">G组</div><div class="hex">#D55E00</div><div class="cn">朱红</div></div>
   </div>
 </div>
 
