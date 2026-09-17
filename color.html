@@ -2,37 +2,57 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
-<title>7组配色 · 横条排列</title>
+<title>科研文献配色 · 16套 × 8色</title>
 <style>
   * { box-sizing: border-box; }
   body {
     font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
     background: #f4f5f7;
     margin: 0;
-    padding: 40px 24px;
+    padding: 36px 20px;
     color: #222;
   }
-  h1 { text-align: center; font-size: 24px; margin: 0 0 6px; }
-  .sub { text-align: center; color: #888; font-size: 13px; margin: 0 0 38px; }
+  h1 { text-align: center; font-size: 23px; margin: 0 0 6px; }
+  .sub { text-align: center; color: #888; font-size: 13px; margin: 0 0 34px; }
+
+  .grid {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
 
   .section {
-    max-width: 1100px;
-    margin: 0 auto 36px;
     background: #fff;
-    border-radius: 16px;
-    padding: 22px 26px 28px;
-    box-shadow: 0 6px 22px rgba(0,0,0,.06);
+    border-radius: 14px;
+    padding: 18px 22px 22px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.05);
   }
-  .section h2 { font-size: 17px; margin: 0 0 4px; }
-  .desc { color: #888; font-size: 12.5px; margin: 0 0 16px; }
+  .section h2 {
+    font-size: 15.5px;
+    margin: 0 0 3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section h2 .tag {
+    font-size: 10.5px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 20px;
+    background: #eef2f7;
+    color: #666;
+  }
+  .desc { color: #999; font-size: 12px; margin: 0 0 12px; }
 
   .bar {
     display: flex;
     width: 100%;
-    height: 92px;
-    border-radius: 12px;
+    height: 78px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 3px 12px rgba(0,0,0,.12);
+    box-shadow: 0 2px 10px rgba(0,0,0,.1);
   }
   .seg {
     flex: 1;
@@ -41,79 +61,278 @@
     align-items: center;
     justify-content: center;
     color: #fff;
-    transition: flex .2s ease;
+    transition: flex .18s ease;
     cursor: default;
+    min-width: 0;
   }
-  .seg:hover { flex: 1.6; }
-  .seg .name { font-size: 17px; font-weight: 700; }
-  .seg .hex  { font-size: 11px; opacity: .9; margin-top: 5px; font-family: monospace; }
-  .seg .cn   { font-size: 11px; opacity: .78; margin-top: 2px; }
+  .seg:hover { flex: 1.7; }
+  .seg .name { font-size: 13px; font-weight: 700; }
+  .seg .hex  { font-size: 9px; opacity: .85; margin-top: 3px; font-family: monospace; white-space: nowrap; }
 </style>
 </head>
 <body>
 
-<h1>7个组分配色 · 横条排列</h1>
-<p class="sub">A组 → G组，从左到右；鼠标悬停色段会展开</p>
+<h1>科研文献配色 · 16套 × 8色</h1>
+<p class="sub">保留原4套（扩展至8色） + 新增12套科研常用色板 · 横条排列 · 鼠标悬停可展开查看</p>
 
-<!-- 方案1 彩虹 -->
+<div class="grid">
+
+<!-- 1 经典彩虹 -->
 <div class="section">
-  <h2>方案一 · 经典彩虹色</h2>
-  <p class="desc">高区分度，适合图表、数据可视化</p>
+  <h2>01 · 经典彩虹色 <span class="tag">高区分度</span></h2>
+  <p class="desc">适合图表、数据可视化；色相差异大，类别多时区分清晰</p>
   <div class="bar">
-    <div class="seg" style="background:#E74C3C"><div class="name">A组</div><div class="hex">#E74C3C</div><div class="cn">红</div></div>
-    <div class="seg" style="background:#E67E22"><div class="name">B组</div><div class="hex">#E67E22</div><div class="cn">橙</div></div>
-    <div class="seg" style="background:#F1C40F;color:#7a6000"><div class="name">C组</div><div class="hex">#F1C40F</div><div class="cn">黄</div></div>
-    <div class="seg" style="background:#2ECC71"><div class="name">D组</div><div class="hex">#2ECC71</div><div class="cn">绿</div></div>
-    <div class="seg" style="background:#1ABC9C"><div class="name">E组</div><div class="hex">#1ABC9C</div><div class="cn">青</div></div>
-    <div class="seg" style="background:#3498DB"><div class="name">F组</div><div class="hex">#3498DB</div><div class="cn">蓝</div></div>
-    <div class="seg" style="background:#9B59B6"><div class="name">G组</div><div class="hex">#9B59B6</div><div class="cn">紫</div></div>
+    <div class="seg" style="background:#E74C3C"><div class="name">A组</div><div class="hex">#E74C3C</div></div>
+    <div class="seg" style="background:#E67E22"><div class="name">B组</div><div class="hex">#E67E22</div></div>
+    <div class="seg" style="background:#F1C40F;color:#7a6000"><div class="name">C组</div><div class="hex">#F1C40F</div></div>
+    <div class="seg" style="background:#2ECC71"><div class="name">D组</div><div class="hex">#2ECC71</div></div>
+    <div class="seg" style="background:#1ABC9C"><div class="name">E组</div><div class="hex">#1ABC9C</div></div>
+    <div class="seg" style="background:#3498DB"><div class="name">F组</div><div class="hex">#3498DB</div></div>
+    <div class="seg" style="background:#9B59B6"><div class="name">G组</div><div class="hex">#9B59B6</div></div>
+    <div class="seg" style="background:#34495E"><div class="name">H组</div><div class="hex">#34495E</div></div>
   </div>
 </div>
 
-<!-- 方案2 马卡龙 -->
+<!-- 2 马卡龙 -->
 <div class="section">
-  <h2>方案二 · 柔和马卡龙色</h2>
-  <p class="desc">清新柔和，适合PPT、UI、海报</p>
+  <h2>02 · 柔和马卡龙色 <span class="tag">PPT/UI</span></h2>
+  <p class="desc">清新柔和，适合演示、海报、UI</p>
   <div class="bar">
-    <div class="seg" style="background:#FF6B6B"><div class="name">A组</div><div class="hex">#FF6B6B</div><div class="cn">珊瑚粉</div></div>
-    <div class="seg" style="background:#FFA94D"><div class="name">B组</div><div class="hex">#FFA94D</div><div class="cn">蜜桃橙</div></div>
-    <div class="seg" style="background:#FFD43B;color:#7a6000"><div class="name">C组</div><div class="hex">#FFD43B</div><div class="cn">柠檬黄</div></div>
-    <div class="seg" style="background:#69DB7C;color:#1a5c28"><div class="name">D组</div><div class="hex">#69DB7C</div><div class="cn">薄荷绿</div></div>
-    <div class="seg" style="background:#4DABF7"><div class="name">E组</div><div class="hex">#4DABF7</div><div class="cn">天空蓝</div></div>
-    <div class="seg" style="background:#9775FA"><div class="name">F组</div><div class="hex">#9775FA</div><div class="cn">薰衣草紫</div></div>
-    <div class="seg" style="background:#F783AC"><div class="name">G组</div><div class="hex">#F783AC</div><div class="cn">玫瑰红</div></div>
+    <div class="seg" style="background:#FF6B6B"><div class="name">A组</div><div class="hex">#FF6B6B</div></div>
+    <div class="seg" style="background:#FFA94D"><div class="name">B组</div><div class="hex">#FFA94D</div></div>
+    <div class="seg" style="background:#FFD43B;color:#7a6000"><div class="name">C组</div><div class="hex">#FFD43B</div></div>
+    <div class="seg" style="background:#69DB7C;color:#1a5c28"><div class="name">D组</div><div class="hex">#69DB7C</div></div>
+    <div class="seg" style="background:#4DABF7"><div class="name">E组</div><div class="hex">#4DABF7</div></div>
+    <div class="seg" style="background:#9775FA"><div class="name">F组</div><div class="hex">#9775FA</div></div>
+    <div class="seg" style="background:#F783AC"><div class="name">G组</div><div class="hex">#F783AC</div></div>
+    <div class="seg" style="background:#63E6BE;color:#0b5c42"><div class="name">H组</div><div class="hex">#63E6BE</div></div>
   </div>
 </div>
 
-<!-- 方案3 深色专业 -->
+<!-- 3 深色专业 -->
 <div class="section">
-  <h2>方案三 · 深色专业风</h2>
-  <p class="desc">沉稳商务，适合报表、正式场合</p>
+  <h2>03 · 深色专业风 <span class="tag">商务报表</span></h2>
+  <p class="desc">沉稳商务，适合正式场合、报表</p>
   <div class="bar">
-    <div class="seg" style="background:#C0392B"><div class="name">A组</div><div class="hex">#C0392B</div><div class="cn">深红</div></div>
-    <div class="seg" style="background:#D35400"><div class="name">B组</div><div class="hex">#D35400</div><div class="cn">赭石</div></div>
-    <div class="seg" style="background:#7D6608"><div class="name">C组</div><div class="hex">#7D6608</div><div class="cn">橄榄</div></div>
-    <div class="seg" style="background:#1E8449"><div class="name">D组</div><div class="hex">#1E8449</div><div class="cn">墨绿</div></div>
-    <div class="seg" style="background:#1A5276"><div class="name">E组</div><div class="hex">#1A5276</div><div class="cn">藏青</div></div>
-    <div class="seg" style="background:#4A235A"><div class="name">F组</div><div class="hex">#4A235A</div><div class="cn">靛蓝</div></div>
-    <div class="seg" style="background:#566573"><div class="name">G组</div><div class="hex">#566573</div><div class="cn">深灰</div></div>
+    <div class="seg" style="background:#C0392B"><div class="name">A组</div><div class="hex">#C0392B</div></div>
+    <div class="seg" style="background:#D35400"><div class="name">B组</div><div class="hex">#D35400</div></div>
+    <div class="seg" style="background:#7D6608"><div class="name">C组</div><div class="hex">#7D6608</div></div>
+    <div class="seg" style="background:#1E8449"><div class="name">D组</div><div class="hex">#1E8449</div></div>
+    <div class="seg" style="background:#1A5276"><div class="name">E组</div><div class="hex">#1A5276</div></div>
+    <div class="seg" style="background:#4A235A"><div class="name">F组</div><div class="hex">#4A235A</div></div>
+    <div class="seg" style="background:#566573"><div class="name">G组</div><div class="hex">#566573</div></div>
+    <div class="seg" style="background:#2C3E50"><div class="name">H组</div><div class="hex">#2C3E50</div></div>
   </div>
 </div>
 
-<!-- 方案4 色盲友好 -->
+<!-- 4 色盲友好 -->
 <div class="section">
-  <h2>方案四 · 高对比 / 色盲友好</h2>
-  <p class="desc">Okabe-Ito 调色板，黑白打印、色盲人群也能区分</p>
+  <h2>04 · 高对比 / 色盲友好 <span class="tag">Okabe-Ito</span></h2>
+  <p class="desc">Okabe-Ito 调色板，黑白打印、色盲人群也能区分；生命科学领域最认可的标准之一</p>
   <div class="bar">
-    <div class="seg" style="background:#000000"><div class="name">A组</div><div class="hex">#000000</div><div class="cn">黑</div></div>
-    <div class="seg" style="background:#E69F00"><div class="name">B组</div><div class="hex">#E69F00</div><div class="cn">橙</div></div>
-    <div class="seg" style="background:#56B4E9"><div class="name">C组</div><div class="hex">#56B4E9</div><div class="cn">天蓝</div></div>
-    <div class="seg" style="background:#009E73"><div class="name">D组</div><div class="hex">#009E73</div><div class="cn">绿</div></div>
-    <div class="seg" style="background:#F0E442;color:#6b5f00"><div class="name">E组</div><div class="hex">#F0E442</div><div class="cn">黄</div></div>
-    <div class="seg" style="background:#0072B2"><div class="name">F组</div><div class="hex">#0072B2</div><div class="cn">蓝</div></div>
-    <div class="seg" style="background:#D55E00"><div class="name">G组</div><div class="hex">#D55E00</div><div class="cn">朱红</div></div>
+    <div class="seg" style="background:#000000"><div class="name">A组</div><div class="hex">#000000</div></div>
+    <div class="seg" style="background:#E69F00"><div class="name">B组</div><div class="hex">#E69F00</div></div>
+    <div class="seg" style="background:#56B4E9"><div class="name">C组</div><div class="hex">#56B4E9</div></div>
+    <div class="seg" style="background:#009E73"><div class="name">D组</div><div class="hex">#009E73</div></div>
+    <div class="seg" style="background:#F0E442;color:#6b5f00"><div class="name">E组</div><div class="hex">#F0E442</div></div>
+    <div class="seg" style="background:#0072B2"><div class="name">F组</div><div class="hex">#0072B2</div></div>
+    <div class="seg" style="background:#D55E00"><div class="name">G组</div><div class="hex">#D55E00</div></div>
+    <div class="seg" style="background:#CC79A7"><div class="name">H组</div><div class="hex">#CC79A7</div></div>
   </div>
 </div>
 
+<!-- 5 ColorBrewer Set2 -->
+<div class="section">
+  <h2>05 · ColorBrewer Set2 <span class="tag">柔和/色盲友好</span></h2>
+  <p class="desc">低饱和定性配色，分组柱状图、箱线图的稳妥默认选择</p>
+  <div class="bar">
+    <div class="seg" style="background:#66C2A5"><div class="name">A组</div><div class="hex">#66C2A5</div></div>
+    <div class="seg" style="background:#FC8D62"><div class="name">B组</div><div class="hex">#FC8D62</div></div>
+    <div class="seg" style="background:#8DA0CB"><div class="name">C组</div><div class="hex">#8DA0CB</div></div>
+    <div class="seg" style="background:#E78AC3"><div class="name">D组</div><div class="hex">#E78AC3</div></div>
+    <div class="seg" style="background:#A6D854"><div class="name">E组</div><div class="hex">#A6D854</div></div>
+    <div class="seg" style="background:#FFD92F;color:#7a6000"><div class="name">F组</div><div class="hex">#FFD92F</div></div>
+    <div class="seg" style="background:#E5C494"><div class="name">G组</div><div class="hex">#E5C494</div></div>
+    <div class="seg" style="background:#B3B3B3"><div class="name">H组</div><div class="hex">#B3B3B3</div></div>
+  </div>
+</div>
+
+<!-- 6 ColorBrewer Dark2 -->
+<div class="section">
+  <h2>06 · ColorBrewer Dark2 <span class="tag">高饱和/细线</span></h2>
+  <p class="desc">饱和度更高、区分度更强，适合细线条、小尺寸标记的数据系列</p>
+  <div class="bar">
+    <div class="seg" style="background:#1B9E77"><div class="name">A组</div><div class="hex">#1B9E77</div></div>
+    <div class="seg" style="background:#D95F02"><div class="name">B组</div><div class="hex">#D95F02</div></div>
+    <div class="seg" style="background:#7570B3"><div class="name">C组</div><div class="hex">#7570B3</div></div>
+    <div class="seg" style="background:#E7298A"><div class="name">D组</div><div class="hex">#E7298A</div></div>
+    <div class="seg" style="background:#66A61E"><div class="name">E组</div><div class="hex">#66A61E</div></div>
+    <div class="seg" style="background:#E6AB02"><div class="name">F组</div><div class="hex">#E6AB02</div></div>
+    <div class="seg" style="background:#A6761D"><div class="name">G组</div><div class="hex">#A6761D</div></div>
+    <div class="seg" style="background:#666666"><div class="name">H组</div><div class="hex">#666666</div></div>
+  </div>
+</div>
+
+<!-- 7 Nature -->
+<div class="section">
+  <h2>07 · Nature 经典 <span class="tag">顶刊</span></h2>
+  <p class="desc">蓝主橙强调，Nature 风格；多色方案适合更多组别</p>
+  <div class="bar">
+    <div class="seg" style="background:#0F6BBD"><div class="name">A组</div><div class="hex">#0F6BBD</div></div>
+    <div class="seg" style="background:#F26F21"><div class="name">B组</div><div class="hex">#F26F21</div></div>
+    <div class="seg" style="background:#9ECAE1;color:#1a4a6b"><div class="name">C组</div><div class="hex">#9ECAE1</div></div>
+    <div class="seg" style="background:#083C5F"><div class="name">D组</div><div class="hex">#083C5F</div></div>
+    <div class="seg" style="background:#7F8C8D"><div class="name">E组</div><div class="hex">#7F8C8D</div></div>
+    <div class="seg" style="background:#E64B35"><div class="name">F组</div><div class="hex">#E64B35</div></div>
+    <div class="seg" style="background:#4DBBD5"><div class="name">G组</div><div class="hex">#4DBBD5</div></div>
+    <div class="seg" style="background:#00A087"><div class="name">H组</div><div class="hex">#00A087</div></div>
+  </div>
+</div>
+
+<!-- 8 Science -->
+<div class="section">
+  <h2>08 · Science 柔和 <span class="tag">顶刊</span></h2>
+  <p class="desc">Science 风格，避免红绿对比，灰度印刷仍可辨识</p>
+  <div class="bar">
+    <div class="seg" style="background:#003399"><div class="name">A组</div><div class="hex">#003399</div></div>
+    <div class="seg" style="background:#CC0000"><div class="name">B组</div><div class="hex">#CC0000</div></div>
+    <div class="seg" style="background:#009900"><div class="name">C组</div><div class="hex">#009900</div></div>
+    <div class="seg" style="background:#FFCC00;color:#6b5f00"><div class="name">D组</div><div class="hex">#FFCC00</div></div>
+    <div class="seg" style="background:#9900CC"><div class="name">E组</div><div class="hex">#9900CC</div></div>
+    <div class="seg" style="background:#E69F00"><div class="name">F组</div><div class="hex">#E69F00</div></div>
+    <div class="seg" style="background:#56B4E9"><div class="name">G组</div><div class="hex">#56B4E9</div></div>
+    <div class="seg" style="background:#009E73"><div class="name">H组</div><div class="hex">#009E73</div></div>
+  </div>
+</div>
+
+<!-- 9 Lancet -->
+<div class="section">
+  <h2>09 · Lancet 低饱和 <span class="tag">医学期刊</span></h2>
+  <p class="desc">清新低饱和，打印友好；医学、临床研究常用</p>
+  <div class="bar">
+    <div class="seg" style="background:#A1C9F4;color:#1a3a5c"><div class="name">A组</div><div class="hex">#A1C9F4</div></div>
+    <div class="seg" style="background:#FFB482;color:#6b3a00"><div class="name">B组</div><div class="hex">#FFB482</div></div>
+    <div class="seg" style="background:#8DE5A1;color:#1a5c28"><div class="name">C组</div><div class="hex">#8DE5A1</div></div>
+    <div class="seg" style="background:#FF9F9B;color:#6b1a18"><div class="name">D组</div><div class="hex">#FF9F9B</div></div>
+    <div class="seg" style="background:#B39FDB"><div class="name">E组</div><div class="hex">#B39FDB</div></div>
+    <div class="seg" style="background:#FDFFB6;color:#6b6800"><div class="name">F组</div><div class="hex">#FDFFB6</div></div>
+    <div class="seg" style="background:#D0F0C0;color:#2a5c1a"><div class="name">G组</div><div class="hex">#D0F0C0</div></div>
+    <div class="seg" style="background:#B0C4DE;color:#1a2a4a"><div class="name">H组</div><div class="hex">#B0C4DE</div></div>
+  </div>
+</div>
+
+<!-- 10 BMJ -->
+<div class="section">
+  <h2>10 · BMJ 高对比 <span class="tag">医学期刊</span></h2>
+  <p class="desc">高对比、低饱和；BMJ 风格，强调可读性</p>
+  <div class="bar">
+    <div class="seg" style="background:#00468B"><div class="name">A组</div><div class="hex">#00468B</div></div>
+    <div class="seg" style="background:#ED0000"><div class="name">B组</div><div class="hex">#ED0000</div></div>
+    <div class="seg" style="background:#42B390"><div class="name">C组</div><div class="hex">#42B390</div></div>
+    <div class="seg" style="background:#FF8C00"><div class="name">D组</div><div class="hex">#FF8C00</div></div>
+    <div class="seg" style="background:#8E44AD"><div class="name">E组</div><div class="hex">#8E44AD</div></div>
+    <div class="seg" style="background:#BDBCBC"><div class="name">F组</div><div class="hex">#BDBCBC</div></div>
+    <div class="seg" style="background:#2C3E50"><div class="name">G组</div><div class="hex">#2C3E50</div></div>
+    <div class="seg" style="background:#E67E22"><div class="name">H组</div><div class="hex">#E67E22</div></div>
+  </div>
+</div>
+
+<!-- 11 Paul Tol Bright -->
+<div class="section">
+  <h2>11 · Paul Tol Bright <span class="tag">色盲友好</span></h2>
+  <p class="desc">科学图表通用默认方案；区分清楚又不刺眼，物理/工程领域常见</p>
+  <div class="bar">
+    <div class="seg" style="background:#4477AA"><div class="name">A组</div><div class="hex">#4477AA</div></div>
+    <div class="seg" style="background:#EE6677"><div class="name">B组</div><div class="hex">#EE6677</div></div>
+    <div class="seg" style="background:#228833"><div class="name">C组</div><div class="hex">#228833</div></div>
+    <div class="seg" style="background:#CCBB44;color:#6b5f00"><div class="name">D组</div><div class="hex">#CCBB44</div></div>
+    <div class="seg" style="background:#66CCEE;color:#0b4a6b"><div class="name">E组</div><div class="hex">#66CCEE</div></div>
+    <div class="seg" style="background:#AA3377"><div class="name">F组</div><div class="hex">#AA3377</div></div>
+    <div class="seg" style="background:#BBBBBB;color:#4a4a4a"><div class="name">G组</div><div class="hex">#BBBBBB</div></div>
+    <div class="seg" style="background:#882255"><div class="name">H组</div><div class="hex">#882255</div></div>
+  </div>
+</div>
+
+<!-- 12 Paul Tol Vibrant -->
+<div class="section">
+  <h2>12 · Paul Tol Vibrant <span class="tag">投影/细线</span></h2>
+  <p class="desc">饱和度略高，适合细线、小标记、投影展示</p>
+  <div class="bar">
+    <div class="seg" style="background:#EE7733"><div class="name">A组</div><div class="hex">#EE7733</div></div>
+    <div class="seg" style="background:#0077BB"><div class="name">B组</div><div class="hex">#0077BB</div></div>
+    <div class="seg" style="background:#33BBEE;color:#0b4a6b"><div class="name">C组</div><div class="hex">#33BBEE</div></div>
+    <div class="seg" style="background:#EE3377"><div class="name">D组</div><div class="hex">#EE3377</div></div>
+    <div class="seg" style="background:#CC3311"><div class="name">E组</div><div class="hex">#CC3311</div></div>
+    <div class="seg" style="background:#009988"><div class="name">F组</div><div class="hex">#009988</div></div>
+    <div class="seg" style="background:#EE6677"><div class="name">G组</div><div class="hex">#EE6677</div></div>
+    <div class="seg" style="background:#AA3377"><div class="name">H组</div><div class="hex">#AA3377</div></div>
+  </div>
+</div>
+
+<!-- 13 Paul Tol Muted -->
+<div class="section">
+  <h2>13 · Paul Tol Muted <span class="tag">密集/8-10类</span></h2>
+  <p class="desc">颜色数量最多的色盲友好方案之一，低饱和让密集图表保持清爽</p>
+  <div class="bar">
+    <div class="seg" style="background:#332288"><div class="name">A组</div><div class="hex">#332288</div></div>
+    <div class="seg" style="background:#88CCEE;color:#0b4a6b"><div class="name">B组</div><div class="hex">#88CCEE</div></div>
+    <div class="seg" style="background:#44AA99"><div class="name">C组</div><div class="hex">#44AA99</div></div>
+    <div class="seg" style="background:#117733"><div class="name">D组</div><div class="hex">#117733</div></div>
+    <div class="seg" style="background:#CC6677"><div class="name">E组</div><div class="hex">#CC6677</div></div>
+    <div class="seg" style="background:#882255"><div class="name">F组</div><div class="hex">#882255</div></div>
+    <div class="seg" style="background:#AA4499"><div class="name">G组</div><div class="hex">#AA4499</div></div>
+    <div class="seg" style="background:#DDCC77;color:#6b5f00"><div class="name">H组</div><div class="hex">#DDCC77</div></div>
+  </div>
+</div>
+
+<!-- 14 ColorBrewer Paired -->
+<div class="section">
+  <h2>14 · ColorBrewer Paired <span class="tag">嵌套类别</span></h2>
+  <p class="desc">深浅成对出现；适合类别天然嵌套（如每种基因型内的对照/处理组），不要用于互不相关的类别</p>
+  <div class="bar">
+    <div class="seg" style="background:#A6CEE3;color:#1a3a5c"><div class="name">A组</div><div class="hex">#A6CEE3</div></div>
+    <div class="seg" style="background:#1F78B4"><div class="name">B组</div><div class="hex">#1F78B4</div></div>
+    <div class="seg" style="background:#B2DF8A;color:#1a5c28"><div class="name">C组</div><div class="hex">#B2DF8A</div></div>
+    <div class="seg" style="background:#33A02C"><div class="name">D组</div><div class="hex">#33A02C</div></div>
+    <div class="seg" style="background:#FB9A99;color:#6b1a18"><div class="name">E组</div><div class="hex">#FB9A99</div></div>
+    <div class="seg" style="background:#E31A1C"><div class="name">F组</div><div class="hex">#E31A1C</div></div>
+    <div class="seg" style="background:#FDBF6F;color:#6b3a00"><div class="name">G组</div><div class="hex">#FDBF6F</div></div>
+    <div class="seg" style="background:#FF7F00"><div class="name">H组</div><div class="hex">#FF7F00</div></div>
+  </div>
+</div>
+
+<!-- 15 Seaborn colorblind -->
+<div class="section">
+  <h2>15 · Seaborn colorblind <span class="tag">色盲友好</span></h2>
+  <p class="desc">Seaborn 默认色盲友好调色板；Python 数据可视化常用</p>
+  <div class="bar">
+    <div class="seg" style="background:#0072B2"><div class="name">A组</div><div class="hex">#0072B2</div></div>
+    <div class="seg" style="background:#009E73"><div class="name">B组</div><div class="hex">#009E73</div></div>
+    <div class="seg" style="background:#D55E00"><div class="name">C组</div><div class="hex">#D55E00</div></div>
+    <div class="seg" style="background:#CC79A7"><div class="name">D组</div><div class="hex">#CC79A7</div></div>
+    <div class="seg" style="background:#F0E442;color:#6b5f00"><div class="name">E组</div><div class="hex">#F0E442</div></div>
+    <div class="seg" style="background:#56B4E9"><div class="name">F组</div><div class="hex">#56B4E9</div></div>
+    <div class="seg" style="background:#E69F00"><div class="name">G组</div><div class="hex">#E69F00</div></div>
+    <div class="seg" style="background:#000000"><div class="name">H组</div><div class="hex">#000000</div></div>
+  </div>
+</div>
+
+<!-- 16 灰度安全 -->
+<div class="section">
+  <h2>16 · 灰度安全 <span class="tag">黑白打印</span></h2>
+  <p class="desc">明度差设计，黑白打印仍可区分；适合必须灰度输出的场景</p>
+  <div class="bar">
+    <div class="seg" style="background:#004488"><div class="name">A组</div><div class="hex">#004488</div></div>
+    <div class="seg" style="background:#DDAA33;color:#6b5f00"><div class="name">B组</div><div class="hex">#DDAA33</div></div>
+    <div class="seg" style="background:#BB5566"><div class="name">C组</div><div class="hex">#BB5566</div></div>
+    <div class="seg" style="background:#228833"><div class="name">D组</div><div class="hex">#228833</div></div>
+    <div class="seg" style="background:#77AADD"><div class="name">E组</div><div class="hex">#77AADD</div></div>
+    <div class="seg" style="background:#AAAAAA;color:#3a3a3a"><div class="name">F组</div><div class="hex">#AAAAAA</div></div>
+    <div class="seg" style="background:#662200"><div class="name">G组</div><div class="hex">#662200</div></div>
+    <div class="seg" style="background:#CCDDEE;color:#1a2a4a"><div class="name">H组</div><div class="hex">#CCDDEE</div></div>
+  </div>
+</div>
+
+</div>
 </body>
 </html>
