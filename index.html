@@ -41,7 +41,11 @@
     .reader-content { flex: 1; overflow-y: auto; padding: 20px 32px 160px 32px; font-family: "Songti SC", "Times New Roman", serif; font-size: 18px; line-height: 1.8; text-align: justify; transition: font-size 0.2s, line-height 0.2s; }
     .reader-content p { margin-bottom: 1.2em; text-indent: 2em; }
     .reader-content p.active-sentence { background: rgba(200, 180, 140, 0.3); border-radius: 4px; }
-    .reader-bottom { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.5); padding: 12px 20px 20px; z-index: 10; transition: background 0.3s; }
+    
+    /* 底部控制条：默认隐藏，加了 show 类才显示 */
+    .reader-bottom { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.5); padding: 12px 20px 20px; z-index: 10; transition: transform 0.3s, opacity 0.3s; transform: translateY(100%); opacity: 0; pointer-events: none; }
+    .reader-bottom.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    
     .progress-row { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-bottom: 8px; }
     .progress-bar { width: 100%; height: 2px; background: rgba(0,0,0,0.1); border-radius: 1px; position: relative; margin-bottom: 16px; }
     .progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: #555; border-radius: 1px; }
@@ -81,32 +85,21 @@
     .stats-tabs { display: flex; background: rgba(0,0,0,0.05); border-radius: 20px; padding: 4px; }
     .stats-tab { padding: 6px 16px; font-size: 13px; border-radius: 16px; cursor: pointer; color: #666; }
     .stats-tab.active { background: #fff; color: #1c1c1e; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    
     .stats-card-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
     .stats-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); border-radius: 16px; padding: 16px; }
     .stats-card-label { font-size: 12px; color: #888; margin-bottom: 8px; }
     .stats-card-value { font-size: 24px; font-weight: 600; color: #1c1c1e; }
     .stats-card-value small { font-size: 12px; font-weight: 400; color: #888; margin-left: 4px; }
-
     .stats-section { background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
     .stats-section-title { font-size: 14px; font-weight: 600; color: #1c1c1e; margin-bottom: 12px; display: flex; justify-content: space-between; }
-
-    /* 柱状图 */
     .bar-chart { display: flex; align-items: flex-end; justify-content: space-between; height: 100px; gap: 6px; margin-top: 10px; }
     .bar-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
     .bar { width: 100%; background: #c7d8c6; border-radius: 4px 4px 0 0; transition: height 0.3s; min-height: 2px; }
     .bar-label { font-size: 10px; color: #888; margin-top: 6px; }
     .bar-value { font-size: 10px; color: #666; margin-bottom: 4px; }
-
-    /* 热力图 */
     .heatmap { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top: 10px; }
     .heat-cell { aspect-ratio: 1; border-radius: 4px; background: rgba(0,0,0,0.05); }
-    .heat-cell.lv1 { background: #d4e0d3; }
-    .heat-cell.lv2 { background: #a8c5a6; }
-    .heat-cell.lv3 { background: #7caa7a; }
-    .heat-cell.lv4 { background: #508e4e; }
-
-    /* 排名列表 */
+    .heat-cell.lv1 { background: #d4e0d3; } .heat-cell.lv2 { background: #a8c5a6; } .heat-cell.lv3 { background: #7caa7a; } .heat-cell.lv4 { background: #508e4e; }
     .rank-list { margin-top: 10px; }
     .rank-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.04); font-size: 13px; }
     .rank-item:last-child { border-bottom: none; }
@@ -141,7 +134,8 @@
   <!-- 主界面 -->
   <div id="desktop" class="page active desktop-view">
     <div class="widget-grid">
-      <div class="widget widget-large" onclick="goTo('reader')">
+      <!-- 日历卡片去掉点击跳转 -->
+      <div class="widget widget-large">
         <div>
           <div class="day-number" id="todayDay">17</div>
           <div class="day-info" id="todayMonth">9月 星期四</div>
@@ -166,12 +160,16 @@
     <div class="reader-top">
       <div class="icon-btn" onclick="goTo('desktop')">&lt; 返回</div>
       <div style="display: flex; gap: 16px;">
-        <div class="icon-btn" onclick="togglePlay()">听</div>
-        <div class="icon-btn" onclick="alert('自动播放切换')">播</div>
+        <!-- 听：切换底部控制条显隐 -->
+        <div class="icon-btn" onclick="toggleReaderBar()">听</div>
+        <!-- 播：切换自动播放 -->
+        <div class="icon-btn" id="autoPlayBtn" onclick="toggleAutoPlay()">播</div>
       </div>
     </div>
     <div class="reader-content" id="readerText"></div>
-    <div class="reader-bottom">
+    
+    <!-- 底部控制条：默认隐藏 -->
+    <div class="reader-bottom" id="readerBottom">
       <div class="progress-row">
         <span id="timeElapsed">本次时长 0 秒</span>
         <span id="timeRemaining">读完剩余 0 分</span>
@@ -273,19 +271,16 @@
       </div>
     </div>
 
-    <!-- 7天柱状图 -->
     <div class="stats-section">
       <div class="stats-section-title">最近 7 天 <span style="font-weight:400;font-size:12px;color:#888;">每日阅读 / 背词</span></div>
       <div class="bar-chart" id="barChart"></div>
     </div>
 
-    <!-- 30天热力图 -->
     <div class="stats-section">
       <div class="stats-section-title">最近 30 天 <span style="font-weight:400;font-size:12px;color:#888;">学习热力图</span></div>
       <div class="heatmap" id="heatmap"></div>
     </div>
 
-    <!-- 阅读最长的文件排名 -->
     <div class="stats-section">
       <div class="stats-section-title">阅读时间最长的文件</div>
       <div class="rank-list" id="rankList">
@@ -299,14 +294,14 @@
     <div class="panel" onclick="event.stopPropagation()">
       <div class="panel-title">目录 / 阅读进度</div>
       <div class="progress-slider">
-        <span>进度 10.9%</span>
-        <input type="range" min="0" max="100" value="10">
-        <span>页码 365 / 3361</span>
+        <span>进度 <span id="catalogPercent">0%</span></span>
+        <input type="range" id="catalogSlider" min="0" max="100" value="0" oninput="jumpToPercent(this.value)">
+        <span>页码 <span id="catalogPage">0 / 0</span></span>
       </div>
       <div class="btn-group">
-        <div class="option-item" onclick="alert('上一章')">上一章</div>
-        <div class="option-item" onclick="alert('恢复进度')">恢复</div>
-        <div class="option-item" onclick="alert('下一章')">下一章</div>
+        <div class="option-item" onclick="jumpPrevChapter()">上一章</div>
+        <div class="option-item" onclick="jumpToPercent(0)">恢复</div>
+        <div class="option-item" onclick="jumpNextChapter()">下一章</div>
       </div>
     </div>
   </div>
@@ -339,9 +334,10 @@
       <div class="slider-row"><span>左右边距</span><input type="range" min="10" max="50" value="32" oninput="setPadding(this.value)"></div>
       <div class="slider-row"><span>行间距</span><input type="range" min="1.2" max="2.5" step="0.1" value="1.8" oninput="setLineHeight(this.value)"></div>
       <div class="btn-group">
-        <div class="option-item selected">上下滑动</div>
-        <div class="option-item">仿真翻页</div>
-        <div class="option-item">上下滚动</div>
+        <!-- 翻页模式切换 -->
+        <div class="option-item selected" onclick="setPageMode('scroll', this)">上下滑动</div>
+        <div class="option-item" onclick="setPageMode('flip', this)">仿真翻页</div>
+        <div class="option-item" onclick="setPageMode('roll', this)">上下滚动</div>
       </div>
     </div>
   </div>
@@ -360,14 +356,11 @@ let MIMO_CONFIG = {
 };
 
 // ==================== 数据统计存储 ====================
-// 数据结构：statsData = { "2026-09-17": { readTime: 10, vocabCount: 5, readWords: 200 } }
 let statsData = JSON.parse(localStorage.getItem('stats_data') || '{}');
-
 function getTodayKey() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-
 function recordStat(type, value) {
   const key = getTodayKey();
   if (!statsData[key]) statsData[key] = { readTime: 0, vocabCount: 0, readWords: 0 };
@@ -440,7 +433,7 @@ function updateVoiceStatus() {
 }
 
 // ==================== 阅读器逻辑 ====================
-let sentences = [], currentIndex = -1, isPlaying = false;
+let sentences = [], currentIndex = -1, isPlaying = false, isAutoPlay = false, pageMode = 'scroll';
 const sampleText = `几分钟前，陆沉载着我行驶在这条公路上。我们正在计划着下一个景点的行程，忽然一声巨响传来，租来的汽车竟然抛锚了。联系了拖车公司之后，我和陆沉下车来到公路旁等待。这时，陆沉轻轻碰了碰我的手。陆沉：“你听。”我疑惑地竖起耳朵，果然有交响乐的声音隐约传来。`;
 
 function initReader() {
@@ -459,13 +452,16 @@ function updateHighlight() {
     document.getElementById('progressFill').style.width = (((currentIndex + 1) / sentences.length) * 100) + '%';
     document.getElementById('timeElapsed').textContent = `本次时长 ${currentIndex + 1} 秒`;
     document.getElementById('timeRemaining').textContent = `读完剩余 ${Math.ceil((sentences.length - currentIndex - 1) * 0.5)} 分`;
+    // 更新目录面板的进度
+    document.getElementById('catalogPercent').textContent = Math.round(((currentIndex + 1) / sentences.length) * 100) + '%';
+    document.getElementById('catalogPage').textContent = `${currentIndex + 1} / ${sentences.length}`;
+    document.getElementById('catalogSlider').value = Math.round(((currentIndex + 1) / sentences.length) * 100);
   }
 }
 
 async function nextSentence() {
   if (currentIndex < sentences.length - 1) {
     currentIndex++; updateHighlight();
-    // 记录统计：每读一句，加 1 秒阅读时长，加 10 个字
     recordStat('readTime', 1);
     recordStat('readWords', 10);
     if (isPlaying) { await speak(sentences[currentIndex], 'reading'); if (isPlaying) nextSentence(); }
@@ -477,6 +473,26 @@ function togglePlay() {
   isPlaying = !isPlaying;
   document.getElementById('playBtn').textContent = isPlaying ? '||' : '■';
   if (isPlaying && currentIndex === -1) nextSentence();
+}
+
+// 听：切换底部控制条显隐
+function toggleReaderBar() {
+  const bar = document.getElementById('readerBottom');
+  bar.classList.toggle('show');
+}
+
+// 播：切换自动播放
+function toggleAutoPlay() {
+  isAutoPlay = !isAutoPlay;
+  const btn = document.getElementById('autoPlayBtn');
+  btn.style.color = isAutoPlay ? '#1c1c1e' : '#555';
+  btn.style.fontWeight = isAutoPlay ? '600' : '400';
+  if (isAutoPlay) {
+    if (currentIndex === -1) nextSentence();
+    if (!isPlaying) togglePlay();
+  } else {
+    if (isPlaying) togglePlay();
+  }
 }
 
 // ==================== 阅读器面板 ====================
@@ -491,6 +507,43 @@ function setTheme(bg, text) {
 function setFontSize(val) { document.getElementById('readerText').style.fontSize = val + 'px'; }
 function setPadding(val) { document.getElementById('readerText').style.paddingLeft = val + 'px'; document.getElementById('readerText').style.paddingRight = val + 'px'; }
 function setLineHeight(val) { document.getElementById('readerText').style.lineHeight = val; }
+
+// 目录：直接跳转
+function jumpToPercent(percent) {
+  const idx = Math.round((percent / 100) * (sentences.length - 1));
+  currentIndex = idx;
+  updateHighlight();
+}
+function jumpPrevChapter() { jumpToPercent(0); }
+function jumpNextChapter() { jumpToPercent(100); }
+
+// 翻页模式切换
+function setPageMode(mode, el) {
+  pageMode = mode;
+  // 清除其他选中
+  el.parentNode.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+  el.classList.add('selected');
+  
+  // 应用模式
+  const content = document.getElementById('readerText');
+  if (mode === 'scroll') {
+    content.style.overflowY = 'auto';
+    content.style.scrollSnapType = 'none';
+    content.style.height = 'auto';
+  } else if (mode === 'flip') {
+    content.style.overflowY = 'auto';
+    content.style.scrollSnapType = 'y mandatory';
+    content.style.height = '100%';
+    // 给每个段落加滚动对齐
+    document.querySelectorAll('.reader-content p').forEach(p => {
+      p.style.scrollSnapAlign = 'start';
+    });
+  } else if (mode === 'roll') {
+    content.style.overflowY = 'auto';
+    content.style.scrollSnapType = 'none';
+    content.style.height = '100%';
+  }
+}
 
 // ==================== 背单词逻辑 ====================
 let vocabList = [
@@ -520,7 +573,6 @@ function nextVocab() {
     vocabIndex++; 
     localStorage.setItem('vocab_index', vocabIndex); 
     renderVocab();
-    // 每切一个新词，记录一次背词量
     recordStat('vocabCount', 1);
   }
 }
@@ -573,17 +625,14 @@ function switchStatsTab(tab, el) {
   renderStats();
 }
 
-// 获取日期 key（格式化）
 function getDateKey(dateObj) {
   return `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
 }
 
 function renderStats() {
-  // 1. 汇总数据
   let totalReadTime = 0, totalVocab = 0, totalReadWords = 0;
   const today = new Date();
   
-  // 计算连续天数
   let streak = 0;
   for (let i = 0; i < 365; i++) {
     const d = new Date(today);
@@ -591,10 +640,9 @@ function renderStats() {
     const key = getDateKey(d);
     if (statsData[key] && (statsData[key].readTime > 0 || statsData[key].vocabCount > 0)) {
       streak++;
-    } else if (i > 0) break; // 一旦断掉就停止
+    } else if (i > 0) break;
   }
 
-  // 按 tab 汇总不同周期
   if (currentStatsTab === 'day') {
     const key = getDateKey(today);
     const d = statsData[key] || { readTime: 0, vocabCount: 0, readWords: 0 };
@@ -624,7 +672,6 @@ function renderStats() {
   document.getElementById('statReadWords').innerHTML = `${totalReadWords} <small>字</small>`;
   document.getElementById('statStreak').innerHTML = `${streak} <small>天</small>`;
 
-  // 2. 近 7 天柱状图
   const barChart = document.getElementById('barChart');
   barChart.innerHTML = '';
   const weekDays = ['日','一','二','三','四','五','六'];
@@ -634,7 +681,7 @@ function renderStats() {
     const d = new Date(today); d.setDate(d.getDate() - i);
     const key = getDateKey(d);
     const data = statsData[key] || { readTime: 0, vocabCount: 0 };
-    const val = data.readTime + data.vocabCount * 5; // 综合值：阅读时长 + 背词量*5
+    const val = data.readTime + data.vocabCount * 5;
     weekData.push({ label: weekDays[d.getDay()], value: val, raw: data });
     if (val > maxVal) maxVal = val;
   }
@@ -646,7 +693,6 @@ function renderStats() {
     barChart.appendChild(wrapper);
   });
 
-  // 3. 近 30 天热力图
   const heatmap = document.getElementById('heatmap');
   heatmap.innerHTML = '';
   for (let i = 29; i >= 0; i--) {
@@ -665,7 +711,6 @@ function renderStats() {
     heatmap.appendChild(cell);
   }
 
-  // 4. 文件排名（这里用模拟数据，因为咱们现在只有一本书）
   const rankList = document.getElementById('rankList');
   rankList.innerHTML = '';
   const rankData = [
