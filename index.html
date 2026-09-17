@@ -420,12 +420,15 @@ function renderShelf() {
   books.forEach((book, index) => {
     const div = document.createElement('div');
     div.className = 'book-item';
-    // 点击进入阅读
-    div.onclick = () => openBook(index);
-    // 长按删除
+    
     let pressTimer = null;
+    let isLongPress = false;
+
+    // 启动长按计时
     const startPress = () => {
+      isLongPress = false;
       pressTimer = setTimeout(() => {
+        isLongPress = true;
         if (confirm(`确定要删除《${book.name}》吗？`)) {
           books.splice(index, 1);
           localStorage.setItem('books_data', JSON.stringify(books));
@@ -433,12 +436,24 @@ function renderShelf() {
         }
       }, 600);
     };
-    const cancelPress = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } };
+
+    // 取消长按
+    const cancelPress = () => {
+      if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+    };
+
+    // 松开时，如果不是长按，就进入阅读
+    const handleClick = () => {
+      if (!isLongPress) openBook(index);
+      isLongPress = false;
+    };
+
     div.addEventListener('touchstart', startPress);
-    div.addEventListener('touchend', cancelPress);
+    div.addEventListener('touchend', (e) => { cancelPress(); handleClick(); });
     div.addEventListener('touchmove', cancelPress);
+
     div.addEventListener('mousedown', startPress);
-    div.addEventListener('mouseup', cancelPress);
+    div.addEventListener('mouseup', () => { cancelPress(); handleClick(); });
     div.addEventListener('mouseleave', cancelPress);
 
     const coverText = book.name.charAt(0);
