@@ -15,23 +15,39 @@
 
     .page { display: none; height: 100%; overflow-y: auto; }
     .page.active { display: block; }
-    .back-btn { margin-bottom: 20px; cursor: pointer; font-size: 15px; color: #666; display: inline-block; }
+    .text-btn { cursor: pointer; font-size: 15px; color: #666; display: inline-block; }
 
     /* --- 桌面 --- */
     .desktop-view { padding: 30px 20px; }
     .widget-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 40px; }
     .widget { background: #fff; border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); padding: 16px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.1s; }
     .widget:active { transform: scale(0.98); }
-    .widget-large { grid-column: span 4; grid-row: span 2; background: #1c1c1e; color: #fff; padding: 20px; }
+    .widget-large { grid-column: span 4; grid-row: span 2; background: #1c1c1e; color: #fff; padding: 20px; cursor: default; }
     .widget-large .day-number { font-size: 56px; font-weight: 300; line-height: 1; letter-spacing: -1px; }
     .widget-large .day-info { font-size: 14px; color: #aaa; margin-top: 6px; }
-    .widget-large .task-tag { display: inline-block; font-size: 12px; color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 4px 12px; margin-top: 16px; width: fit-content; }
+    .widget-large .task-tag { display: inline-block; font-size: 12px; color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 4px 12px; margin-top: 16px; width: fit-content; cursor: pointer; transition: background 0.2s; }
+    .widget-large .task-tag:active { background: rgba(255,255,255,0.1); }
     .widget-medium { grid-column: span 2; grid-row: span 1; }
     .widget-title { font-size: 16px; font-weight: 600; color: #1c1c1e; }
     .widget-desc { font-size: 12px; color: #888; margin-top: 4px; }
     .widget-line { width: 24px; height: 2px; background: #1c1c1e; margin-top: 14px; border-radius: 1px; }
     .widget-small { grid-column: span 1; align-items: center; justify-content: center; padding: 16px 8px; }
     .widget-small .title { font-size: 12px; color: #1c1c1e; font-weight: 600; margin-top: 4px; }
+
+    /* --- 书架 --- */
+    .shelf-view { padding: 20px; }
+    .shelf-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .shelf-title { font-size: 18px; font-weight: 600; color: #3e3a35; }
+    .shelf-list { display: flex; flex-direction: column; gap: 16px; }
+    .book-item { display: flex; gap: 14px; background: #fff; border-radius: 16px; padding: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); cursor: pointer; transition: transform 0.1s; position: relative; user-select: none; }
+    .book-item:active { transform: scale(0.98); }
+    .book-cover { width: 60px; height: 80px; border-radius: 8px; background: #2c2c2c; color: #fff; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: 600; flex-shrink: 0; }
+    .book-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+    .book-name { font-size: 15px; font-weight: 600; color: #1c1c1e; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .book-meta { font-size: 11px; color: #888; display: flex; justify-content: space-between; margin-top: 4px; }
+    .book-progress { font-size: 11px; color: #666; margin-top: 4px; }
+    .shelf-empty { text-align: center; color: #aaa; font-size: 14px; margin-top: 60px; }
+    .shelf-import { display: block; width: 100%; padding: 14px; margin-top: 20px; background: #1c1c1e; color: #fff; border: none; border-radius: 16px; font-size: 15px; cursor: pointer; text-align: center; }
 
     /* --- 阅读器 --- */
     .reader-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; transition: background 0.3s; }
@@ -41,11 +57,11 @@
     .reader-content { flex: 1; overflow-y: auto; padding: 20px 32px 160px 32px; font-family: "Songti SC", "Times New Roman", serif; font-size: 18px; line-height: 1.8; text-align: justify; transition: font-size 0.2s, line-height 0.2s; }
     .reader-content p { margin-bottom: 1.2em; text-indent: 2em; }
     .reader-content p.active-sentence { background: rgba(200, 180, 140, 0.3); border-radius: 4px; }
-    
-    /* 底部控制条：默认隐藏，加了 show 类才显示 */
+    .reader-middle-hit { position: absolute; top: 60px; left: 0; width: 100%; height: calc(100% - 60px); z-index: 5; }
     .reader-bottom { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.5); padding: 12px 20px 20px; z-index: 10; transition: transform 0.3s, opacity 0.3s; transform: translateY(100%); opacity: 0; pointer-events: none; }
     .reader-bottom.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
-    
+    .reader-audio-bar { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.5); padding: 12px 20px 20px; z-index: 11; transition: transform 0.3s, opacity 0.3s; transform: translateY(100%); opacity: 0; pointer-events: none; }
+    .reader-audio-bar.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
     .progress-row { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-bottom: 8px; }
     .progress-bar { width: 100%; height: 2px; background: rgba(0,0,0,0.1); border-radius: 1px; position: relative; margin-bottom: 16px; }
     .progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: #555; border-radius: 1px; }
@@ -79,7 +95,7 @@
     .vocab-stats { font-size: 12px; color: #888; text-align: center; margin-top: 20px; }
 
     /* --- 统计页 --- */
-    .stats-view { padding: 30px 20px 100px 20px; background: #e8e4d9; }
+    .stats-view { padding: 30px 20px 100px 20px; background: #e8e4d9; position: relative; }
     .stats-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
     .stats-title { font-size: 18px; font-weight: 600; color: #3e3a35; }
     .stats-tabs { display: flex; background: rgba(0,0,0,0.05); border-radius: 20px; padding: 4px; }
@@ -105,6 +121,7 @@
     .rank-item:last-child { border-bottom: none; }
     .rank-item .rank-name { color: #333; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 10px; }
     .rank-item .rank-value { color: #888; font-size: 12px; }
+    .stats-back { position: absolute; right: 20px; bottom: 20px; font-size: 15px; color: #3e3a35; cursor: pointer; }
 
     /* --- 弹窗 --- */
     .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 100; display: none; align-items: flex-end; backdrop-filter: blur(2px); }
@@ -125,6 +142,8 @@
     .progress-slider input { flex: 1; }
     .btn-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .btn-group .option-item { padding: 14px; }
+    .task-input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 14px; color: #333; }
+    .task-input-row input { width: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 8px; text-align: center; font-family: inherit; }
   </style>
 </head>
 <body>
@@ -134,13 +153,12 @@
   <!-- 主界面 -->
   <div id="desktop" class="page active desktop-view">
     <div class="widget-grid">
-      <!-- 日历卡片去掉点击跳转 -->
       <div class="widget widget-large">
         <div>
           <div class="day-number" id="todayDay">17</div>
           <div class="day-info" id="todayMonth">9月 星期四</div>
         </div>
-        <div class="task-tag" id="todayTask">今日任务：背 20 个单词</div>
+        <div class="task-tag" id="todayTask" onclick="openPanel('task')">今日任务：背 20 个单词</div>
       </div>
       <div class="widget widget-medium" onclick="goTo('vocab')">
         <div>
@@ -149,27 +167,42 @@
         </div>
         <div class="widget-line"></div>
       </div>
-      <div class="widget widget-small" onclick="goTo('reader')"><div class="widget-title">读书</div></div>
+      <div class="widget widget-small" onclick="goTo('shelf')"><div class="widget-title">读书</div></div>
       <div class="widget widget-small" onclick="goTo('settings')"><div class="widget-title">设置</div></div>
       <div class="widget widget-small" onclick="goTo('stats')"><div class="widget-title">统计</div></div>
     </div>
   </div>
 
+  <!-- 书架页面 -->
+  <div id="shelf" class="page shelf-view">
+    <div class="shelf-header">
+      <div class="shelf-title">全部</div>
+      <div class="text-btn" onclick="goTo('desktop')">返回</div>
+    </div>
+    <div class="shelf-list" id="shelfList"></div>
+    <div class="shelf-empty" id="shelfEmpty">书架空空如也，点击下方按钮导入 TXT 书籍</div>
+    <input type="file" id="bookFile" accept=".txt" style="display:none" onchange="importBook(this)">
+    <div class="shelf-import" onclick="document.getElementById('bookFile').click()">导入 TXT 书籍</div>
+  </div>
+
   <!-- 阅读器页面 -->
   <div id="reader" class="page reader-view" style="background: #e8e4d9; color: #3e3a35;">
     <div class="reader-top">
-      <div class="icon-btn" onclick="goTo('desktop')">&lt; 返回</div>
+      <div class="text-btn" onclick="goTo('shelf')">返回</div>
       <div style="display: flex; gap: 16px;">
-        <!-- 听：切换底部控制条显隐 -->
-        <div class="icon-btn" onclick="toggleReaderBar()">听</div>
-        <!-- 播：切换自动播放 -->
-        <div class="icon-btn" id="autoPlayBtn" onclick="toggleAutoPlay()">播</div>
+        <div class="icon-btn" id="listenBtn" onclick="toggleAudioBar()">听</div>
       </div>
     </div>
+    <div class="reader-middle-hit" onclick="toggleReaderBottom()"></div>
     <div class="reader-content" id="readerText"></div>
-    
-    <!-- 底部控制条：默认隐藏 -->
     <div class="reader-bottom" id="readerBottom">
+      <div class="bottom-menu" style="margin-top:0; padding-top:0; border-top:none;">
+        <div class="icon-btn" onclick="openPanel('catalog')">目录</div>
+        <div class="icon-btn" onclick="openPanel('theme')">背景</div>
+        <div class="icon-btn" onclick="openPanel('font')">A 字号</div>
+      </div>
+    </div>
+    <div class="reader-audio-bar" id="readerAudioBar">
       <div class="progress-row">
         <span id="timeElapsed">本次时长 0 秒</span>
         <span id="timeRemaining">读完剩余 0 分</span>
@@ -190,7 +223,7 @@
 
   <!-- 设置页 -->
   <div id="settings" class="page settings-view">
-    <div class="back-btn" onclick="goTo('desktop')">&lt; 返回桌面</div>
+    <div class="text-btn" onclick="goTo('desktop')" style="margin-bottom:20px;">返回</div>
     <div class="settings-group">
       <label class="settings-label">MiMo API Key</label>
       <input class="settings-input" id="apiKeyInput" type="password" placeholder="sk-... 或 tp-...">
@@ -216,11 +249,18 @@
         <div>背单词音色：<span id="currentVocabVoice">默认</span></div>
       </div>
     </div>
+    <div class="settings-group">
+      <label class="settings-label">界面字体（导入后全局生效）</label>
+      <input type="file" id="fontFile" accept=".ttf,.otf,.woff,.woff2" style="display:none" onchange="uploadFont(this)">
+      <button class="settings-btn secondary" onclick="document.getElementById('fontFile').click()">选择字体文件</button>
+      <button class="settings-btn secondary" onclick="resetFont()" style="margin-left:8px;">恢复默认</button>
+      <div class="settings-status" id="fontStatus">未上传，使用系统默认字体</div>
+    </div>
   </div>
 
   <!-- 背单词页面 -->
   <div id="vocab" class="page vocab-view">
-    <div class="back-btn" onclick="goTo('desktop')">&lt; 返回桌面</div>
+    <div class="text-btn" onclick="goTo('desktop')" style="margin-bottom:20px;">返回</div>
     <div style="display: flex; gap: 10px; margin-bottom: 16px;">
       <input type="file" id="vocabFile" accept=".txt,.csv" style="display:none" onchange="importVocab(this)">
       <button class="settings-btn secondary" onclick="document.getElementById('vocabFile').click()">导入词库</button>
@@ -251,45 +291,40 @@
         <div class="stats-tab" onclick="switchStatsTab('year', this)">年</div>
       </div>
     </div>
-
     <div class="stats-card-group">
-      <div class="stats-card">
-        <div class="stats-card-label">阅读时长</div>
-        <div class="stats-card-value" id="statReadTime">0 <small>分钟</small></div>
-      </div>
-      <div class="stats-card">
-        <div class="stats-card-label">背单词量</div>
-        <div class="stats-card-value" id="statVocabCount">0 <small>个</small></div>
-      </div>
-      <div class="stats-card">
-        <div class="stats-card-label">阅读字数</div>
-        <div class="stats-card-value" id="statReadWords">0 <small>字</small></div>
-      </div>
-      <div class="stats-card">
-        <div class="stats-card-label">连续天数</div>
-        <div class="stats-card-value" id="statStreak">0 <small>天</small></div>
-      </div>
+      <div class="stats-card"><div class="stats-card-label">阅读时长</div><div class="stats-card-value" id="statReadTime">0 <small>分钟</small></div></div>
+      <div class="stats-card"><div class="stats-card-label">背单词量</div><div class="stats-card-value" id="statVocabCount">0 <small>个</small></div></div>
+      <div class="stats-card"><div class="stats-card-label">阅读字数</div><div class="stats-card-value" id="statReadWords">0 <small>字</small></div></div>
+      <div class="stats-card"><div class="stats-card-label">连续天数</div><div class="stats-card-value" id="statStreak">0 <small>天</small></div></div>
     </div>
-
     <div class="stats-section">
       <div class="stats-section-title">最近 7 天 <span style="font-weight:400;font-size:12px;color:#888;">每日阅读 / 背词</span></div>
       <div class="bar-chart" id="barChart"></div>
     </div>
-
     <div class="stats-section">
       <div class="stats-section-title">最近 30 天 <span style="font-weight:400;font-size:12px;color:#888;">学习热力图</span></div>
       <div class="heatmap" id="heatmap"></div>
     </div>
-
     <div class="stats-section">
       <div class="stats-section-title">阅读时间最长的文件</div>
-      <div class="rank-list" id="rankList">
-        <div class="rank-item"><span class="rank-name">暂无数据</span><span class="rank-value"></span></div>
+      <div class="rank-list" id="rankList"></div>
+    </div>
+    <div class="stats-back" onclick="goTo('desktop')">返回</div>
+  </div>
+
+  <!-- 弹窗 -->
+  <div id="panel-task" class="overlay" onclick="closePanel('task')">
+    <div class="panel" onclick="event.stopPropagation()">
+      <div class="panel-title">设置今日任务</div>
+      <div class="task-input-row"><span>背单词数量</span><input type="number" id="taskVocabInput" value="20" min="1"></div>
+      <div class="task-input-row"><span>阅读时长（分钟）</span><input type="number" id="taskReadInput" value="30" min="1"></div>
+      <div class="btn-group" style="grid-template-columns: 1fr 1fr;">
+        <div class="option-item" onclick="closePanel('task')">取消</div>
+        <div class="option-item selected" onclick="saveTask()">保存</div>
       </div>
     </div>
   </div>
 
-  <!-- 弹窗面板 -->
   <div id="panel-catalog" class="overlay" onclick="closePanel('catalog')">
     <div class="panel" onclick="event.stopPropagation()">
       <div class="panel-title">目录 / 阅读进度</div>
@@ -334,8 +369,7 @@
       <div class="slider-row"><span>左右边距</span><input type="range" min="10" max="50" value="32" oninput="setPadding(this.value)"></div>
       <div class="slider-row"><span>行间距</span><input type="range" min="1.2" max="2.5" step="0.1" value="1.8" oninput="setLineHeight(this.value)"></div>
       <div class="btn-group">
-        <!-- 翻页模式切换 -->
-        <div class="option-item selected" onclick="setPageMode('scroll', this)">上下滑动</div>
+        <div class="option-item selected" onclick="setPageMode('slide', this)">左右滑动</div>
         <div class="option-item" onclick="setPageMode('flip', this)">仿真翻页</div>
         <div class="option-item" onclick="setPageMode('roll', this)">上下滚动</div>
       </div>
@@ -368,6 +402,98 @@ function recordStat(type, value) {
   if (type === 'vocabCount') statsData[key].vocabCount += value;
   if (type === 'readWords') statsData[key].readWords += value;
   localStorage.setItem('stats_data', JSON.stringify(statsData));
+}
+
+// ==================== 书籍管理 ====================
+let books = JSON.parse(localStorage.getItem('books_data') || '[]');
+let currentBook = null;
+
+function renderShelf() {
+  const list = document.getElementById('shelfList');
+  const empty = document.getElementById('shelfEmpty');
+  list.innerHTML = '';
+  if (books.length === 0) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  books.forEach((book, index) => {
+    const div = document.createElement('div');
+    div.className = 'book-item';
+    // 点击进入阅读
+    div.onclick = () => openBook(index);
+    // 长按删除
+    let pressTimer = null;
+    const startPress = () => {
+      pressTimer = setTimeout(() => {
+        if (confirm(`确定要删除《${book.name}》吗？`)) {
+          books.splice(index, 1);
+          localStorage.setItem('books_data', JSON.stringify(books));
+          renderShelf();
+        }
+      }, 600);
+    };
+    const cancelPress = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } };
+    div.addEventListener('touchstart', startPress);
+    div.addEventListener('touchend', cancelPress);
+    div.addEventListener('touchmove', cancelPress);
+    div.addEventListener('mousedown', startPress);
+    div.addEventListener('mouseup', cancelPress);
+    div.addEventListener('mouseleave', cancelPress);
+
+    const coverText = book.name.charAt(0);
+    div.innerHTML = `
+      <div class="book-cover">${coverText}</div>
+      <div class="book-info">
+        <div class="book-name">${book.name}</div>
+        <div class="book-meta">
+          <span>${(book.size / 1024).toFixed(1)} KB</span>
+          <span>${book.importTime}</span>
+        </div>
+        <div class="book-progress">阅读至 ${book.progress || '0%'}</div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function importBook(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (!file.name.endsWith('.txt')) { alert('目前仅支持 TXT 文件'); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const text = e.target.result;
+    const now = new Date();
+    const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const book = {
+      name: file.name.replace('.txt', ''),
+      size: file.size,
+      importTime: timeStr,
+      content: text,
+      progress: '0%',
+      lastIndex: 0
+    };
+    books.push(book);
+    localStorage.setItem('books_data', JSON.stringify(books));
+    renderShelf();
+    alert(`《${book.name}》导入成功`);
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+function openBook(index) {
+  currentBook = index;
+  const book = books[index];
+  const container = document.getElementById('readerText');
+  // 按句号/问号/感叹号/换行切分
+  sentences = book.content.split(/(?<=[。！？\n])/).filter(s => s.trim().length > 0);
+  container.innerHTML = sentences.map((s, i) => `<p id="sent-${i}">${s.trim()}</p>`).join('');
+  currentIndex = book.lastIndex || -1;
+  if (currentIndex >= sentences.length) currentIndex = -1;
+  updateHighlight();
+  goTo('reader');
 }
 
 // ==================== MiMo TTS 核心函数 ====================
@@ -432,17 +558,57 @@ function updateVoiceStatus() {
   document.getElementById('currentVocabVoice').textContent = MIMO_CONFIG.voiceSamples.vocab ? '自定义' : '默认';
 }
 
-// ==================== 阅读器逻辑 ====================
-let sentences = [], currentIndex = -1, isPlaying = false, isAutoPlay = false, pageMode = 'scroll';
-const sampleText = `几分钟前，陆沉载着我行驶在这条公路上。我们正在计划着下一个景点的行程，忽然一声巨响传来，租来的汽车竟然抛锚了。联系了拖车公司之后，我和陆沉下车来到公路旁等待。这时，陆沉轻轻碰了碰我的手。陆沉：“你听。”我疑惑地竖起耳朵，果然有交响乐的声音隐约传来。`;
-
-function initReader() {
-  const container = document.getElementById('readerText');
-  if (sentences.length === 0) {
-    sentences = sampleText.split(/(?<=[。！？])/).filter(s => s.trim().length > 0);
-    container.innerHTML = sentences.map((s, i) => `<p id="sent-${i}">${s}</p>`).join('');
-  }
+// ==================== 字体导入逻辑 ====================
+async function uploadFont(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { alert('字体文件不能超过 5MB'); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const fontData = reader.result;
+    try {
+      localStorage.setItem('custom_font', fontData);
+      localStorage.setItem('custom_font_name', file.name);
+    } catch(e) {
+      alert('字体文件太大，浏览器存储空间不足，请用更小的字体文件（推荐 woff2 格式）');
+      return;
+    }
+    applyFont(fontData, file.name);
+    document.getElementById('fontStatus').textContent = '已导入：' + file.name;
+    document.getElementById('fontStatus').className = 'settings-status success';
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
 }
+
+function applyFont(dataUrl, name) {
+  const oldStyle = document.getElementById('custom-font-style');
+  if (oldStyle) oldStyle.remove();
+  const style = document.createElement('style');
+  style.id = 'custom-font-style';
+  style.textContent = `
+    @font-face {
+      font-family: 'CustomUserFont';
+      src: url('${dataUrl}');
+    }
+    body, .reader-content, .vocab-word, .widget-title, .stats-title, .book-name, .settings-label, .panel-title, .option-item {
+      font-family: 'CustomUserFont', -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function resetFont() {
+  localStorage.removeItem('custom_font');
+  localStorage.removeItem('custom_font_name');
+  const oldStyle = document.getElementById('custom-font-style');
+  if (oldStyle) oldStyle.remove();
+  document.getElementById('fontStatus').textContent = '未上传，使用系统默认字体';
+  document.getElementById('fontStatus').className = 'settings-status';
+}
+
+// ==================== 阅读器逻辑 ====================
+let sentences = [], currentIndex = -1, isPlaying = false, pageMode = 'slide';
 
 function updateHighlight() {
   document.querySelectorAll('.reader-content p').forEach(p => p.classList.remove('active-sentence'));
@@ -452,10 +618,15 @@ function updateHighlight() {
     document.getElementById('progressFill').style.width = (((currentIndex + 1) / sentences.length) * 100) + '%';
     document.getElementById('timeElapsed').textContent = `本次时长 ${currentIndex + 1} 秒`;
     document.getElementById('timeRemaining').textContent = `读完剩余 ${Math.ceil((sentences.length - currentIndex - 1) * 0.5)} 分`;
-    // 更新目录面板的进度
     document.getElementById('catalogPercent').textContent = Math.round(((currentIndex + 1) / sentences.length) * 100) + '%';
     document.getElementById('catalogPage').textContent = `${currentIndex + 1} / ${sentences.length}`;
     document.getElementById('catalogSlider').value = Math.round(((currentIndex + 1) / sentences.length) * 100);
+    // 保存阅读进度
+    if (currentBook !== null && books[currentBook]) {
+      books[currentBook].lastIndex = currentIndex;
+      books[currentBook].progress = Math.round(((currentIndex + 1) / sentences.length) * 100) + '%';
+      localStorage.setItem('books_data', JSON.stringify(books));
+    }
   }
 }
 
@@ -475,24 +646,16 @@ function togglePlay() {
   if (isPlaying && currentIndex === -1) nextSentence();
 }
 
-// 听：切换底部控制条显隐
-function toggleReaderBar() {
+function toggleReaderBottom() {
   const bar = document.getElementById('readerBottom');
   bar.classList.toggle('show');
+  document.getElementById('readerAudioBar').classList.remove('show');
 }
 
-// 播：切换自动播放
-function toggleAutoPlay() {
-  isAutoPlay = !isAutoPlay;
-  const btn = document.getElementById('autoPlayBtn');
-  btn.style.color = isAutoPlay ? '#1c1c1e' : '#555';
-  btn.style.fontWeight = isAutoPlay ? '600' : '400';
-  if (isAutoPlay) {
-    if (currentIndex === -1) nextSentence();
-    if (!isPlaying) togglePlay();
-  } else {
-    if (isPlaying) togglePlay();
-  }
+function toggleAudioBar() {
+  const bar = document.getElementById('readerAudioBar');
+  bar.classList.toggle('show');
+  document.getElementById('readerBottom').classList.remove('show');
 }
 
 // ==================== 阅读器面板 ====================
@@ -508,7 +671,6 @@ function setFontSize(val) { document.getElementById('readerText').style.fontSize
 function setPadding(val) { document.getElementById('readerText').style.paddingLeft = val + 'px'; document.getElementById('readerText').style.paddingRight = val + 'px'; }
 function setLineHeight(val) { document.getElementById('readerText').style.lineHeight = val; }
 
-// 目录：直接跳转
 function jumpToPercent(percent) {
   const idx = Math.round((percent / 100) * (sentences.length - 1));
   currentIndex = idx;
@@ -517,31 +679,30 @@ function jumpToPercent(percent) {
 function jumpPrevChapter() { jumpToPercent(0); }
 function jumpNextChapter() { jumpToPercent(100); }
 
-// 翻页模式切换
 function setPageMode(mode, el) {
   pageMode = mode;
-  // 清除其他选中
   el.parentNode.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
   el.classList.add('selected');
-  
-  // 应用模式
   const content = document.getElementById('readerText');
-  if (mode === 'scroll') {
-    content.style.overflowY = 'auto';
-    content.style.scrollSnapType = 'none';
-    content.style.height = 'auto';
+  if (mode === 'slide') {
+    content.style.overflowX = 'auto';
+    content.style.overflowY = 'hidden';
+    content.style.display = 'flex';
+    content.style.flexDirection = 'row';
+    content.style.scrollSnapType = 'x mandatory';
+    content.querySelectorAll('p').forEach(p => { p.style.minWidth = '100%'; p.style.scrollSnapAlign = 'start'; });
   } else if (mode === 'flip') {
+    content.style.overflowX = 'hidden';
     content.style.overflowY = 'auto';
+    content.style.display = 'block';
     content.style.scrollSnapType = 'y mandatory';
-    content.style.height = '100%';
-    // 给每个段落加滚动对齐
-    document.querySelectorAll('.reader-content p').forEach(p => {
-      p.style.scrollSnapAlign = 'start';
-    });
-  } else if (mode === 'roll') {
+    content.querySelectorAll('p').forEach(p => { p.style.minWidth = 'auto'; p.style.scrollSnapAlign = 'start'; });
+  } else {
+    content.style.overflowX = 'hidden';
     content.style.overflowY = 'auto';
+    content.style.display = 'block';
     content.style.scrollSnapType = 'none';
-    content.style.height = '100%';
+    content.querySelectorAll('p').forEach(p => { p.style.minWidth = 'auto'; p.style.scrollSnapAlign = 'none'; });
   }
 }
 
@@ -606,6 +767,7 @@ function importVocab(input) {
     alert(`成功导入 ${newList.length} 个单词`);
   };
   reader.readAsText(file);
+  input.value = '';
 }
 
 function resetVocab() {
@@ -617,56 +779,35 @@ function resetVocab() {
 
 // ==================== 统计页逻辑 ====================
 let currentStatsTab = 'day';
-
 function switchStatsTab(tab, el) {
   currentStatsTab = tab;
   document.querySelectorAll('.stats-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   renderStats();
 }
-
 function getDateKey(dateObj) {
   return `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
 }
-
 function renderStats() {
   let totalReadTime = 0, totalVocab = 0, totalReadWords = 0;
   const today = new Date();
-  
   let streak = 0;
   for (let i = 0; i < 365; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
+    const d = new Date(today); d.setDate(d.getDate() - i);
     const key = getDateKey(d);
-    if (statsData[key] && (statsData[key].readTime > 0 || statsData[key].vocabCount > 0)) {
-      streak++;
-    } else if (i > 0) break;
+    if (statsData[key] && (statsData[key].readTime > 0 || statsData[key].vocabCount > 0)) { streak++; } else if (i > 0) break;
   }
-
   if (currentStatsTab === 'day') {
     const key = getDateKey(today);
     const d = statsData[key] || { readTime: 0, vocabCount: 0, readWords: 0 };
     totalReadTime = d.readTime; totalVocab = d.vocabCount; totalReadWords = d.readWords;
   } else if (currentStatsTab === 'week') {
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(today); d.setDate(d.getDate() - i);
-      const key = getDateKey(d);
-      if (statsData[key]) { totalReadTime += statsData[key].readTime; totalVocab += statsData[key].vocabCount; totalReadWords += statsData[key].readWords; }
-    }
+    for (let i = 0; i < 7; i++) { const d = new Date(today); d.setDate(d.getDate() - i); const key = getDateKey(d); if (statsData[key]) { totalReadTime += statsData[key].readTime; totalVocab += statsData[key].vocabCount; totalReadWords += statsData[key].readWords; } }
   } else if (currentStatsTab === 'month') {
-    for (let i = 0; i < 30; i++) {
-      const d = new Date(today); d.setDate(d.getDate() - i);
-      const key = getDateKey(d);
-      if (statsData[key]) { totalReadTime += statsData[key].readTime; totalVocab += statsData[key].vocabCount; totalReadWords += statsData[key].readWords; }
-    }
+    for (let i = 0; i < 30; i++) { const d = new Date(today); d.setDate(d.getDate() - i); const key = getDateKey(d); if (statsData[key]) { totalReadTime += statsData[key].readTime; totalVocab += statsData[key].vocabCount; totalReadWords += statsData[key].readWords; } }
   } else {
-    for (let i = 0; i < 365; i++) {
-      const d = new Date(today); d.setDate(d.getDate() - i);
-      const key = getDateKey(d);
-      if (statsData[key]) { totalReadTime += statsData[key].readTime; totalVocab += statsData[key].vocabCount; totalReadWords += statsData[key].readWords; }
-    }
+    for (let i = 0; i < 365; i++) { const d = new Date(today); d.setDate(d.getDate() - i); const key = getDateKey(d); if (statsData[key]) { totalReadTime += statsData[key].readTime; totalVocab += statsData[key].vocabCount; totalReadWords += statsData[key].readWords; } }
   }
-
   document.getElementById('statReadTime').innerHTML = `${Math.floor(totalReadTime / 60)} <small>分钟</small>`;
   document.getElementById('statVocabCount').innerHTML = `${totalVocab} <small>个</small>`;
   document.getElementById('statReadWords').innerHTML = `${totalReadWords} <small>字</small>`;
@@ -713,9 +854,7 @@ function renderStats() {
 
   const rankList = document.getElementById('rankList');
   rankList.innerHTML = '';
-  const rankData = [
-    { name: '当前正在阅读的书籍', value: totalReadTime > 0 ? Math.floor(totalReadTime/60) + '分钟' : '暂无' }
-  ];
+  const rankData = [ { name: '当前正在阅读的书籍', value: totalReadTime > 0 ? Math.floor(totalReadTime/60) + '分钟' : '暂无' } ];
   rankData.forEach((item, idx) => {
     const div = document.createElement('div');
     div.className = 'rank-item';
@@ -724,24 +863,54 @@ function renderStats() {
   });
 }
 
+// ==================== 今日任务逻辑 ====================
+function loadTask() {
+  const task = JSON.parse(localStorage.getItem('today_task') || '{"vocab":20,"read":30}');
+  document.getElementById('todayTask').textContent = `今日任务：背 ${task.vocab} 个单词，阅读 ${task.read} 分钟`;
+  document.getElementById('taskVocabInput').value = task.vocab;
+  document.getElementById('taskReadInput').value = task.read;
+}
+function saveTask() {
+  const vocab = parseInt(document.getElementById('taskVocabInput').value) || 20;
+  const read = parseInt(document.getElementById('taskReadInput').value) || 30;
+  localStorage.setItem('today_task', JSON.stringify({ vocab, read }));
+  loadTask();
+  closePanel('task');
+}
+
 // ==================== 路由与初始化 ====================
 function goTo(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
-  if (pageId === 'reader') initReader();
+  if (pageId === 'shelf') renderShelf();
   if (pageId === 'vocab') renderVocab();
   if (pageId === 'stats') renderStats();
-  if (pageId === 'settings') { document.getElementById('apiKeyInput').value = MIMO_CONFIG.apiKey; updateVoiceStatus(); }
+  if (pageId === 'settings') { 
+    document.getElementById('apiKeyInput').value = MIMO_CONFIG.apiKey; 
+    updateVoiceStatus();
+    const fontStatus = document.getElementById('fontStatus');
+    const savedFontName = localStorage.getItem('custom_font_name');
+    if (savedFontName) {
+      fontStatus.textContent = '已导入：' + savedFontName;
+      fontStatus.className = 'settings-status success';
+    }
+  }
 }
 
-// 日历
+// 日历与今日任务
 const now = new Date();
 document.getElementById('todayDay').textContent = now.getDate();
 const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 const weekNames = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
 document.getElementById('todayMonth').textContent = `${monthNames[now.getMonth()]} ${weekNames[now.getDay()]}`;
 
+// 加载已保存的字体
+const savedFont = localStorage.getItem('custom_font');
+if (savedFont) applyFont(savedFont, localStorage.getItem('custom_font_name') || '');
+
+loadTask();
 renderVocab();
+renderShelf();
 </script>
 </body>
 </html>
