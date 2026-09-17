@@ -16,38 +16,18 @@
       overflow-x: hidden;
     }
 
-    /* 统一容器，最大宽度模拟手机 */
-    .app-container { width: 100%; max-width: 420px; position: relative; }
+    .app-container { width: 100%; max-width: 420px; position: relative; height: 100vh; overflow: hidden; }
 
-    /* --- 桌面小组件页面 --- */
-    .desktop-view { padding: 30px 20px; }
-    .widget-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-top: 40px;
-    }
+    /* --- 1. 桌面小组件页面 --- */
+    .desktop-view { padding: 30px 20px; overflow-y: auto; height: 100%; }
+    .widget-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 40px; }
     .widget {
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-      padding: 16px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.1s;
+      background: #fff; border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      padding: 16px; cursor: pointer; display: flex; flex-direction: column;
+      justify-content: space-between; transition: transform 0.1s;
     }
     .widget:active { transform: scale(0.98); }
-
-    /* 大组件：日历 */
-    .widget-large {
-      grid-column: span 4;
-      grid-row: span 2;
-      background: #1c1c1e;
-      color: #fff;
-      padding: 20px;
-    }
+    .widget-large { grid-column: span 4; grid-row: span 2; background: #1c1c1e; color: #fff; padding: 20px; }
     .widget-large .day-number { font-size: 56px; font-weight: 300; line-height: 1; letter-spacing: -1px; }
     .widget-large .day-info { font-size: 14px; color: #aaa; margin-top: 6px; }
     .widget-large .task-tag { 
@@ -55,138 +35,127 @@
       border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; 
       padding: 4px 12px; margin-top: 16px; width: fit-content;
     }
-
-    /* 中组件：背单词 */
-    .widget-medium {
-      grid-column: span 2;
-      grid-row: span 1;
-    }
+    .widget-medium { grid-column: span 2; grid-row: span 1; }
     .widget-title { font-size: 16px; font-weight: 600; color: #1c1c1e; }
     .widget-desc { font-size: 12px; color: #888; margin-top: 4px; }
-    .widget-line { 
-      width: 24px; height: 2px; background: #1c1c1e; 
-      margin-top: 14px; border-radius: 1px;
-    }
-
-    /* 小图标：占1列 */
-    .widget-small {
-      grid-column: span 1;
-      align-items: center;
-      justify-content: center;
-      padding: 16px 8px;
-    }
+    .widget-line { width: 24px; height: 2px; background: #1c1c1e; margin-top: 14px; border-radius: 1px; }
+    .widget-small { grid-column: span 1; align-items: center; justify-content: center; padding: 16px 8px; }
     .widget-small .title { font-size: 12px; color: #1c1c1e; font-weight: 600; margin-top: 4px; }
 
-    /* --- 阅读/听书页面 --- */
+    /* --- 2. 阅读页面 --- */
     .reader-view {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100vh;
-      background: #e8e4d9;
-      display: none;
-      flex-direction: column;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: none; flex-direction: column; transition: background 0.3s;
     }
     .reader-view.active { display: flex; }
 
     .reader-top {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 20px;
-      font-size: 15px; color: #555;
-      z-index: 10;
+      padding: 12px 20px; font-size: 15px; color: #555; z-index: 10;
     }
     .reader-top .icon-btn { padding: 8px; cursor: pointer; font-size: 16px; }
 
+    /* 正文区，字号和行距将在这里变化 */
     .reader-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 32px 160px 32px;
+      flex: 1; overflow-y: auto; padding: 20px 32px 160px 32px;
       font-family: "Songti SC", "Times New Roman", serif;
-      font-size: 18px;
-      line-height: 1.8;
-      color: #3e3a35;
-      text-align: justify;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path d="M10 10 Q 50 50 100 10 T 190 10" fill="none" stroke="%23dcd6c8" stroke-width="0.5" opacity="0.4"/></svg>');
-      background-repeat: repeat;
+      font-size: 18px; line-height: 1.8; text-align: justify;
+      transition: font-size 0.2s, line-height 0.2s;
     }
     .reader-content p { margin-bottom: 1.2em; text-indent: 2em; }
     .reader-content p.active-sentence { background: rgba(200, 180, 140, 0.3); border-radius: 4px; }
 
+    /* --- 3. 底部悬浮控制条 --- */
     .reader-bottom {
       position: absolute; bottom: 0; left: 0; width: 100%;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(255,255,255,0.5);
-      padding: 12px 20px 20px;
-      z-index: 10;
+      background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.5);
+      padding: 12px 20px 20px; z-index: 10; transition: background 0.3s;
     }
-    .progress-row {
-      display: flex; justify-content: space-between;
-      font-size: 12px; color: #666;
-      margin-bottom: 8px;
-    }
-    .progress-bar {
-      width: 100%; height: 2px; background: rgba(0,0,0,0.1);
-      border-radius: 1px; position: relative; margin-bottom: 16px;
-    }
-    .progress-fill {
-      position: absolute; left: 0; top: 0; height: 100%; width: 0%;
-      background: #555; border-radius: 1px;
-    }
-    .control-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 10px;
-    }
+    .progress-row { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-bottom: 8px; }
+    .progress-bar { width: 100%; height: 2px; background: rgba(0,0,0,0.1); border-radius: 1px; position: relative; margin-bottom: 16px; }
+    .progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: #555; border-radius: 1px; }
+    .control-row { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
     .control-btn {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: rgba(0,0,0,0.05);
-      display: flex; justify-content: center; align-items: center;
-      font-size: 18px; color: #333; cursor: pointer;
-      user-select: none;
+      width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.05);
+      display: flex; justify-content: center; align-items: center; font-size: 18px; color: #333; cursor: pointer;
     }
     .control-btn:active { background: rgba(0,0,0,0.1); }
     .control-btn.play-btn { width: 56px; height: 56px; font-size: 22px; }
-
-    .bottom-menu {
-      display: flex; justify-content: space-around; align-items: center;
-      margin-top: 16px; padding-top: 12px;
-      border-top: 1px solid rgba(0,0,0,0.06);
-    }
+    .bottom-menu { display: flex; justify-content: space-around; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.06); }
     .bottom-menu .icon-btn { font-size: 16px; color: #666; cursor: pointer; padding: 8px; }
 
-    .page { display: none; }
-    .page.active { display: block; }
-
-    .vocab-view { padding: 30px 20px; }
-    .vocab-card {
-      background: #fff; border-radius: 20px; padding: 40px 20px;
-      text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-      margin-bottom: 20px; min-height: 300px;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
+    /* --- 4. 弹出面板 (防微信读书风格) --- */
+    .overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4); z-index: 100; display: none;
+      align-items: flex-end; /* 底部对齐 */
+      backdrop-filter: blur(2px);
     }
+    .overlay.active { display: flex; }
+    .panel {
+      width: 100%; background: rgba(245, 244, 240, 0.96);
+      backdrop-filter: blur(20px); border-radius: 20px 20px 0 0;
+      padding: 20px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    }
+    .overlay.active .panel { transform: translateY(0); }
+    .panel-title { text-align: center; font-size: 14px; color: #888; margin-bottom: 20px; }
+    
+    /* 面板内的选项通用样式 */
+    .option-grid { display: grid; gap: 12px; margin-bottom: 20px; }
+    .option-item {
+      padding: 12px; border-radius: 12px; text-align: center;
+      font-size: 15px; color: #333; cursor: pointer; border: 1px solid transparent;
+      background: rgba(0,0,0,0.04); transition: all 0.2s;
+    }
+    .option-item:active { background: rgba(0,0,0,0.1); }
+    .option-item.selected { background: #1c1c1e; color: #fff; }
+
+    /* 颜色网格 */
+    .color-grid { grid-template-columns: repeat(4, 1fr); }
+    .color-item { height: 50px; border-radius: 12px; cursor: pointer; border: 2px solid transparent; }
+    .color-item.selected { border-color: #1c1c1e; }
+    
+    /* 字号/行距 滑块 */
+    .slider-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; font-size: 14px; }
+    .slider-row input { width: 60%; }
+
+    /* 进度条模拟 */
+    .progress-slider { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-size: 13px; color: #666; }
+    .progress-slider input { flex: 1; }
+
+    /* 按钮组 */
+    .btn-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .btn-group .option-item { padding: 14px; }
+
+    /* --- 5. 背单词页面 --- */
+    .vocab-view { padding: 30px 20px; display: none; height: 100%; overflow-y: auto; }
+    .vocab-view.active { display: block; }
+    .vocab-card { background: #fff; border-radius: 20px; padding: 40px 20px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.04); margin-bottom: 20px; min-height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     .vocab-word { font-size: 36px; font-weight: 600; color: #1c1c1e; }
     .vocab-phonetic { font-size: 16px; color: #888; margin-top: 8px; }
     .vocab-meaning { font-size: 18px; color: #444; margin-top: 30px; }
-    .vocab-btn {
-      display: inline-block; padding: 10px 24px; margin-top: 30px;
-      background: #1c1c1e; color: #fff; border-radius: 20px;
-      font-size: 14px; cursor: pointer;
-    }
+    .vocab-btn { display: inline-block; padding: 10px 24px; margin-top: 30px; background: #1c1c1e; color: #fff; border-radius: 20px; font-size: 14px; cursor: pointer; }
+    
+    .page { display: none; }
+    .page.active { display: block; }
   </style>
 </head>
 <body>
 
 <div class="app-container">
   
-  <!-- 1. 桌面小组件主界面 -->
+  <!-- 主界面 -->
   <div id="desktop" class="page active desktop-view">
     <div class="widget-grid">
-      <div class="widget widget-large" onclick="goTo('calendar')">
+      <div class="widget widget-large" onclick="goTo('reader')">
         <div>
           <div class="day-number" id="todayDay">17</div>
           <div class="day-info" id="todayMonth">9月 星期四</div>
         </div>
         <div class="task-tag">今日任务：背 20 个单词</div>
       </div>
-
       <div class="widget widget-medium" onclick="goTo('vocab')">
         <div>
           <div class="widget-title">背单词</div>
@@ -194,29 +163,25 @@
         </div>
         <div class="widget-line"></div>
       </div>
-
       <div class="widget widget-small" onclick="goTo('reader')">
         <div class="widget-title">读书</div>
       </div>
-
-      <div class="widget widget-small" onclick="goTo('settings')">
+      <div class="widget widget-small" onclick="alert('设置页开发中')">
         <div class="widget-title">设置</div>
       </div>
-      
-      <div class="widget widget-small" onclick="goTo('stats')">
+      <div class="widget widget-small" onclick="alert('统计页开发中')">
         <div class="widget-title">统计</div>
       </div>
     </div>
   </div>
 
-  <!-- 2. 看书/听书页面 -->
-  <div id="reader" class="page reader-view">
+  <!-- 阅读器页面 -->
+  <div id="reader" class="page reader-view" style="background: #e8e4d9; color: #3e3a35;">
     <div class="reader-top">
       <div class="icon-btn" onclick="goTo('desktop')">&lt; 返回</div>
       <div style="display: flex; gap: 16px;">
-        <div class="icon-btn" onclick="alert('听书开关')">听</div>
+        <div class="icon-btn" onclick="toggleReaderMode()">听</div>
         <div class="icon-btn" onclick="alert('自动播放切换')">播</div>
-        <div class="icon-btn" onclick="alert('搜索')">搜</div>
       </div>
     </div>
 
@@ -236,14 +201,14 @@
         <div class="control-btn" onclick="nextSentence()">&gt;</div>
       </div>
       <div class="bottom-menu">
-        <div class="icon-btn" onclick="goTo('desktop')">目录</div>
-        <div class="icon-btn" onclick="alert('字号调节')">字号</div>
-        <div class="icon-btn" onclick="alert('背景色切换')">背景</div>
+        <div class="icon-btn" onclick="openPanel('catalog')">目录</div>
+        <div class="icon-btn" onclick="openPanel('theme')">背景</div>
+        <div class="icon-btn" onclick="openPanel('font')">A 字号</div>
       </div>
     </div>
   </div>
 
-  <!-- 3. 背单词页面 -->
+  <!-- 背单词页面 -->
   <div id="vocab" class="page vocab-view">
     <div style="margin-bottom: 20px; cursor: pointer; font-size: 15px; color: #666;" onclick="goTo('desktop')">&lt; 返回桌面</div>
     <div class="vocab-card">
@@ -252,211 +217,189 @@
       <div class="vocab-meaning" id="vocabMeaning">int. 喂；哈罗</div>
       <div class="vocab-btn" onclick="speakWord()">朗读单词</div>
     </div>
-    <div style="display: flex; justify-content: space-between; color: #666; font-size: 14px;">
-      <span onclick="alert('上一个')">&lt; 上一个</span>
-      <span onclick="alert('标记已掌握')">已掌握</span>
-      <span onclick="alert('下一个')">下一个 &gt;</span>
+  </div>
+
+  <!-- ================= 弹出面板区域 ================= -->
+  
+  <!-- 1. 目录/进度面板 (对应截图2) -->
+  <div id="panel-catalog" class="overlay" onclick="closePanel('catalog')">
+    <div class="panel" onclick="event.stopPropagation()">
+      <div class="panel-title">目录 / 阅读进度</div>
+      <div class="progress-slider">
+        <span>进度 10.9%</span>
+        <input type="range" min="0" max="100" value="10" onchange="alert('跳转到 '+this.value+'%')">
+        <span>页码 365 / 3361</span>
+      </div>
+      <div class="btn-group">
+        <div class="option-item" onclick="alert('上一章')">上一章</div>
+        <div class="option-item" onclick="alert('恢复进度')">恢复</div>
+        <div class="option-item" onclick="alert('下一章')">下一章</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 背景主题面板 (对应截图1) -->
+  <div id="panel-theme" class="overlay" onclick="closePanel('theme')">
+    <div class="panel" onclick="event.stopPropagation()">
+      <div class="panel-title">背景主题</div>
+      <div class="option-grid color-grid">
+        <div class="color-item" style="background:#e8e4d9;" onclick="setTheme('#e8e4d9', '#3e3a35', this)"></div>
+        <div class="color-item" style="background:#f5f1e3;" onclick="setTheme('#f5f1e3', '#3e3a35', this)"></div>
+        <div class="color-item" style="background:#c7d8c6;" onclick="setTheme('#c7d8c6', '#2c3e2d', this)"></div>
+        <div class="color-item" style="background:#2c2c2c;" onclick="setTheme('#2c2c2c', '#a0a0a0', this)"></div>
+        <div class="color-item" style="background:#3b2e2e;" onclick="setTheme('#3b2e2e', '#d1b8b8', this)"></div>
+        <div class="color-item" style="background:#1a1a1a;" onclick="setTheme('#1a1a1a', '#888888', this)"></div>
+        <div class="color-item" style="background:#4a3b3b;" onclick="setTheme('#4a3b3b', '#c8b8b8', this)"></div>
+        <div class="color-item" style="background:#1c2331;" onclick="setTheme('#1c2331', '#7a8ba8', this)"></div>
+      </div>
+      <div class="btn-group">
+        <div class="option-item selected" onclick="setSystemTheme(this)">系统</div>
+        <div class="option-item" onclick="setTheme('#f5f1e3', '#3e3a35', this)">白昼</div>
+        <div class="option-item" onclick="setTheme('#2c2c2c', '#a0a0a0', this)">夜间</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 字体排版面板 (对应截图4) -->
+  <div id="panel-font" class="overlay" onclick="closePanel('font')">
+    <div class="panel" onclick="event.stopPropagation()">
+      <div class="panel-title">字体与排版</div>
+      <div class="slider-row">
+        <span>字号大小</span>
+        <input type="range" min="14" max="32" value="18" oninput="setFontSize(this.value)">
+      </div>
+      <div class="slider-row">
+        <span>左右边距</span>
+        <input type="range" min="10" max="50" value="32" oninput="setPadding(this.value)">
+      </div>
+      <div class="slider-row">
+        <span>行间距</span>
+        <input type="range" min="1.2" max="2.5" step="0.1" value="1.8" oninput="setLineHeight(this.value)">
+      </div>
+      <div class="btn-group">
+        <div class="option-item selected">上下滑动</div>
+        <div class="option-item">仿真翻页</div>
+        <div class="option-item">上下滚动</div>
+      </div>
     </div>
   </div>
 
 </div>
 
 <script>
-// ==================== 1. MiMo 配置 ====================
+// ==================== 1. 配置与核心逻辑 ====================
 const MIMO_CONFIG = {
-  // 你截图里的 API Key，注意：如果报 401，可能需要换成 Token Plan 的 tp- 密钥
   apiKey: 'sk-ci1olyd8rbmef1ajl32fxldqszh5kcap1s8oxqtwqn4eef9b',
   model: 'mimo-v2.5-tts-voiceclone',
-  // 先留空，使用默认预置音色跑通流程。有样本后再替换成 Base64 字符串
   voiceSampleBase64: '' 
 };
 
-// ==================== 2. 核心 speak 函数 ====================
 async function speak(text, scene = 'reading') {
-  if (!MIMO_CONFIG.apiKey) {
-    console.warn('请先填入 MiMo API Key');
-    return;
-  }
-
+  if (!MIMO_CONFIG.apiKey) return;
   try {
     const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
       method: 'POST',
-      headers: {
-        'api-key': MIMO_CONFIG.apiKey,
-        'Content-Type': 'application/json'
-      },
+      headers: { 'api-key': MIMO_CONFIG.apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: MIMO_CONFIG.model,
-        messages: [
-          { role: 'user', content: '' },
-          { role: 'assistant', content: text }
-        ],
-        audio: {
-          format: 'wav',
-          // 有样本用样本，没样本用默认音色
-          voice: MIMO_CONFIG.voiceSampleBase64
-            ? `data:audio/wav;base64,${MIMO_CONFIG.voiceSampleBase64}`
-            : 'qi_yu_0306'
-        }
+        messages: [{ role: 'user', content: '' }, { role: 'assistant', content: text }],
+        audio: { format: 'wav', voice: MIMO_CONFIG.voiceSampleBase64 ? `data:audio/wav;base64,${MIMO_CONFIG.voiceSampleBase64}` : 'qi_yu_0306' }
       })
     });
-
     const data = await response.json();
-    
-    if (!data.choices || !data.choices[0].message.audio) {
-      console.error('返回数据格式不对，检查API Key或模型名:', data);
-      return;
-    }
-
-    // 解码 Base64 音频
+    if (!data.choices || !data.choices[0].message.audio) { console.error('数据异常:', data); return; }
     const audioBase64 = data.choices[0].message.audio.data;
     const audioBytes = atob(audioBase64);
     const arrayBuffer = new ArrayBuffer(audioBytes.length);
     const uint8Array = new Uint8Array(arrayBuffer);
-    for (let i = 0; i < audioBytes.length; i++) {
-      uint8Array[i] = audioBytes.charCodeAt(i);
-    }
-
-    // 播放
+    for (let i = 0; i < audioBytes.length; i++) uint8Array[i] = audioBytes.charCodeAt(i);
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
     const source = audioCtx.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(audioCtx.destination);
-    
-    return new Promise((resolve) => {
-      source.onended = () => {
-        audioCtx.close();
-        resolve();
-      };
-      source.start(0);
-    });
-
-  } catch (error) {
-    console.error('TTS 请求失败:', error);
-  }
+    source.buffer = audioBuffer; source.connect(audioCtx.destination);
+    return new Promise((resolve) => { source.onended = () => { audioCtx.close(); resolve(); }; source.start(0); });
+  } catch (error) { console.error('TTS 请求失败:', error); }
 }
 
-// ==================== 3. 音频样本转 Base64 工具 ====================
-async function fileToBase64(file) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.readAsDataURL(file);
-  });
-}
-
-window.addEventListener('drop', async (e) => {
-  e.preventDefault();
-  const file = e.dataTransfer.files[0];
-  if (file) {
-    const base64 = await fileToBase64(file);
-    console.log('你的声音样本 Base64：', base64);
-    // 复制这串字符，粘贴到 MIMO_CONFIG.voiceSampleBase64 里
-  }
-});
-
-// ==================== 4. 日历初始化 ====================
-const now = new Date();
-document.getElementById('todayDay').textContent = now.getDate();
-const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-const weekNames = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
-document.getElementById('todayMonth').textContent = `${monthNames[now.getMonth()]} ${weekNames[now.getDay()]}`;
-
-// ==================== 5. 页面路由切换 ====================
+// ==================== 2. 页面路由 ====================
 function goTo(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  if (pageId === 'desktop') {
-    document.getElementById('desktop').classList.add('active');
-  } else if (pageId === 'reader') {
-    document.getElementById('reader').classList.add('active');
-    initReader();
-  } else if (pageId === 'vocab') {
-    document.getElementById('vocab').classList.add('active');
-  }
+  document.getElementById(pageId).classList.add('active');
+  if (pageId === 'reader') initReader();
 }
 
-// ==================== 6. 阅读器逻辑 ====================
-let sentences = [];
-let currentIndex = -1;
-let isPlaying = false;
-
-const sampleText = `本书仅限在中国大陆地区发行销售。地球上最伟大的表演。著者：理查德·道金斯。译者：李虎 徐双悦。策划推广：中信出版社。出版发行：中信出版集团股份有限公司。北京市朝阳区惠新东街甲4号富盛大厦2座 邮编 100029。字数：290千字。本次时长 1 秒。读完剩余 27 分。京权图字：01-2010-4852。`;
+// ==================== 3. 阅读器与 UI 面板交互 ====================
+let sentences = [], currentIndex = -1, isPlaying = false;
+const sampleText = `几分钟前，陆沉载着我行驶在这条公路上。我们正在计划着下一个景点的行程，忽然一声巨响传来，租来的汽车竟然抛锚了。联系了拖车公司之后，我和陆沉下车来到公路旁等待。这时，陆沉轻轻碰了碰我的手。陆沉：“你听。”我疑惑地竖起耳朵，果然有交响乐的声音隐约传来。我循声望去，发现辽阔平原的那头有一片建筑物的轮廓。`;
 
 function initReader() {
-  const textContainer = document.getElementById('readerText');
+  const container = document.getElementById('readerText');
   if (sentences.length === 0) {
     sentences = sampleText.split(/(?<=[。！？])/).filter(s => s.trim().length > 0);
-    textContainer.innerHTML = sentences.map((s, i) => `<p id="sent-${i}">${s}</p>`).join('');
+    container.innerHTML = sentences.map((s, i) => `<p id="sent-${i}">${s}</p>`).join('');
   }
 }
 
 function updateHighlight() {
   document.querySelectorAll('.reader-content p').forEach(p => p.classList.remove('active-sentence'));
-  if (currentIndex >= 0 && currentIndex < sentences.length) {
-    const el = document.getElementById(`sent-${currentIndex}`);
-    if (el) {
-      el.classList.add('active-sentence');
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-    const percent = ((currentIndex + 1) / sentences.length) * 100;
-    document.getElementById('progressFill').style.width = percent + '%';
+  if (current();
+Index >= 0 && currentIndex < sentences.length) {
+       const el = document.getElementById(` ifsent-${currentIndex}`);
+    ( if (el)is { el.classList.add('active-sentence');Playing el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    document.getElementById('progressFill').style.width = (((currentIndex + 1) / sentences.length) * 100) + '%';
     document.getElementById('timeElapsed').textContent = `本次时长 ${currentIndex + 1} 秒`;
-    const remaining = Math.ceil((sentences.length - currentIndex - 1) * 0.5);
-    document.getElementById('timeRemaining').textContent = `读完剩余 ${remaining} 分`;
+    document.getElementById('timeRemaining').textContent = `读完剩余 ${Math.ceil((sentences.length - currentIndex - 1) * 0.5)} 分`;
   }
 }
 
 async function nextSentence() {
   if (currentIndex < sentences.length - 1) {
-    currentIndex++;
-    updateHighlight();
-
-    if (isPlaying) {
-      const text = sentences[currentIndex];
-      console.log("朗读:", text);
-      await speak(text, 'reading');
-      
-      if (isPlaying) {
-        nextSentence();
-      }
-    }
-  } else {
-    isPlaying = false;
-    document.getElementById('playBtn').textContent = '■';
-  }
+    currentIndex++; updateHighlight) { await speak(sentences[currentIndex], 'reading'); if (isPlaying) nextSentence(); }
+  } else { isPlaying = false; document.getElementById('playBtn').textContent = '■'; }
 }
 
-function prevSentence() {
-  if (currentIndex > 0) {
-    currentIndex--;
-    updateHighlight();
-  }
-}
-
+function prevSentence() { if (currentIndex > 0) { currentIndex--; updateHighlight(); } }
 function togglePlay() {
   isPlaying = !isPlaying;
-  const btn = document.getElementById('playBtn');
-  if (isPlaying) {
-    btn.textContent = '||';
-    if (currentIndex === -1) nextSentence();
-  } else {
-    btn.textContent = '■';
-  }
+  document.getElementById('playBtn').textContent = isPlaying ? '||' : '■';
+  if (isPlaying && currentIndex === -1) nextSentence();
 }
 
-// ==================== 7. 背单词逻辑 ====================
-const vocabData = [
-  { word: "Hello", phonetic: "/həˈloʊ/", meaning: "int. 喂；哈罗" },
-  { word: "World", phonetic: "/wɜːrld/", meaning: "n. 世界；领域" },
-  { word: "Evolution", phonetic: "/ˌiːvəˈluːʃn/", meaning: "n. 进化；演变" }
-];
-let vocabIndex = 0;
+// 打开面板
+function openPanel(type) { document.getElementById(`panel-${type}`).classList.add('active'); }
+// 关闭面板
+function closePanel(type) { document.getElementById(`panel-${type}`).classList.remove('active'); }
 
-async function speakWord() {
-  const word = document.getElementById('vocabWord').textContent;
-  await speak(word, 'vocab');
+// 修改主题
+function setTheme(bg, text, el) {
+  document.getElementById('reader').style.background = bg;
+  document.getElementById('reader').style.color = text;
+  document.querySelector('.reader-top').style.color = text;
+  document.querySelector('.reader-bottom').style.background = bg === '#2c2c2c' || bg === '#1a1a1a' || bg === '#3b2e2e' || bg === '#4a3b3b' || bg === '#1c2331' ? 'rgba(30,30,30,0.85)' : 'rgba(255,255,255,0.85)';
+  document.querySelector('.reader-bottom').style.color = text;
+  document.querySelector('.reader-bottom').style.borderTopColor = bg === '#2c2c2c' || bg === '#1a1a1a' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)';
+  closePanel('theme');
 }
+
+// 系统默认
+function setSystemTheme(el) {
+  setTheme('#e8e4d9', '#3e3a35', el);
+}
+
+// 字体修改
+function setFontSize(val) { document.getElementById('readerText').style.fontSize = val + 'px'; }
+function setPadding(val) { document.getElementById('readerText').style.paddingLeft = val + 'px'; document.getElementById('readerText').style.paddingRight = val + 'px'; }
+function setLineHeight(val) { document.getElementById('readerText').style.lineHeight = val; }
+
+// ==================== 4. 背单词逻辑 ====================
+async function speakWord() { await speak(document.getElementById('vocabWord').textContent, 'vocab'); }
+
+// ==================== 5. 初始化日历 ====================
+const now = new Date();
+document.getElementById('todayDay').textContent = now.getDate();
+const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+const weekNames = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+document.getElementById('todayMonth').textContent = `${monthNames[now.getMonth()]} ${weekNames[now.getDay()]}`;
 </script>
 </body>
 </html>
