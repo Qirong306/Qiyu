@@ -54,9 +54,67 @@
     .reader-view.active { display: flex; }
     .reader-top { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; font-size: 15px; color: #555; z-index: 10; }
     .reader-top .icon-btn { padding: 8px; cursor: pointer; font-size: 16px; }
-    .reader-content { flex: 1; overflow-y: auto; padding: 20px 32px 160px 32px; font-family: "Songti SC", "Times New Roman", serif; font-size: 18px; line-height: 1.8; text-align: justify; transition: font-size 0.2s, line-height 0.2s; }
+    .reader-content { flex: 1; overflow-y: auto; padding: 20px 32px 160px 32px; font-family: "Songti SC", "Times New Roman", serif; font-size: 18px; line-height: 1.8; text-align: justify; transition: font-size 0.2s, line-height 0.2s; position: relative; }
     .reader-content p { margin-bottom: 1.2em; text-indent: 2em; }
     .reader-content p.active-sentence { background: rgba(200, 180, 140, 0.3); border-radius: 4px; }
+
+    /* 左右滑动模式 */
+    .reader-content.slide-mode {
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      display: flex !important;
+      flex-direction: row !important;
+      scroll-snap-type: x mandatory;
+      padding: 20px 0 !important;
+      -webkit-overflow-scrolling: touch;
+    }
+    .reader-content.slide-mode p {
+      min-width: 100%;
+      width: 100%;
+      flex-shrink: 0;
+      scroll-snap-align: center;
+      padding: 20px 32px;
+      margin: 0;
+      box-sizing: border-box;
+      text-indent: 2em;
+      display: flex;
+      align-items: center;
+    }
+
+    /* 仿真翻页模式 */
+    .reader-content.flip-mode {
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      display: block !important;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .reader-content.flip-mode p {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      scroll-snap-align: start;
+      box-sizing: border-box;
+      padding: 20px 32px;
+      margin-bottom: 0 !important;
+      text-indent: 2em;
+    }
+
+    /* 上下滚动模式 */
+    .reader-content.roll-mode {
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      display: block !important;
+      scroll-snap-type: none;
+    }
+    .reader-content.roll-mode p {
+      min-height: auto;
+      display: block;
+      scroll-snap-align: none;
+      margin-bottom: 1.2em;
+      padding: 0;
+    }
+
     .reader-middle-hit { position: absolute; top: 60px; left: 0; width: 100%; height: calc(100% - 60px); z-index: 5; }
     .reader-bottom { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.5); padding: 12px 20px 20px; z-index: 10; transition: transform 0.3s, opacity 0.3s; transform: translateY(100%); opacity: 0; pointer-events: none; }
     .reader-bottom.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
@@ -567,6 +625,8 @@ function openBook(index) {
     }).join('');
     
     updateHighlight();
+    // 重新应用当前翻页模式
+    applyPageMode();
   }, 50);
 }
 
@@ -709,7 +769,14 @@ function updateHighlight() {
   document.querySelectorAll('.reader-content p').forEach(p => p.classList.remove('active-sentence'));
   if (currentIndex >= 0 && currentIndex < sentences.length) {
     const el = document.getElementById(`sent-${currentIndex}`);
-    if (el) { el.classList.add('active-sentence'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    if (el) { 
+      el.classList.add('active-sentence'); 
+      if (pageMode === 'slide') {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      } else {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
     document.getElementById('progressFill').style.width = (((currentIndex + 1) / sentences.length) * 100) + '%';
     document.getElementById('timeElapsed').textContent = `本次时长 ${currentIndex + 1} 秒`;
     document.getElementById('timeRemaining').textContent = `读完剩余 ${Math.ceil((sentences.length - currentIndex - 1) * 0.5)} 分`;
@@ -773,31 +840,56 @@ function jumpToPercent(percent) {
 function jumpPrevChapter() { jumpToPercent(0); }
 function jumpNextChapter() { jumpToPercent(100); }
 
+// 应用当前翻页模式（重新渲染 DOM 后调用）
+function applyPageMode() {
+  const content = document.getElementById('readerText');
+  content.classList.remove('slide-mode', 'flip-mode', 'roll-mode');
+  if (pageMode === 'slide') content.classList.add('slide-mode');
+  else if (pageMode === 'flip') content.classList.add('flip-mode');
+  else content.classList.add('roll-mode');
+}
+
 function setPageMode(mode, el) {
   pageMode = mode;
   el.parentNode.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
   el.classList.add('selected');
-  const content = document.getElementById('readerText');
-  if (mode === 'slide') {
-    content.style.overflowX = 'auto';
-    content.style.overflowY = 'hidden';
-    content.style.display = 'flex';
-    content.style.flexDirection = 'row';
-    content.style.scrollSnapType = 'x mandatory';
-    content.querySelectorAll('p').forEach(p => { p.style.minWidth = '100%'; p.style.scrollSnapAlign = 'start'; });
-  } else if (mode === 'flip') {
-    content.style.overflowX = 'hidden';
-    content.style.overflowY = 'auto';
-    content.style.display = 'block';
-    content.style.scrollSnapType = 'y mandatory';
-    content.querySelectorAll('p').forEach(p => { p.style.minWidth = 'auto'; p.style.scrollSnapAlign = 'start'; });
-  } else {
-    content.style.overflowX = 'hidden';
-    content.style.overflowY = 'auto';
-    content.style.display = 'block';
-    content.style.scrollSnapType = 'none';
-    content.querySelectorAll('p').forEach(p => { p.style.minWidth = 'auto'; p.style.scrollSnapAlign = 'none'; });
+  applyPageMode();
+  // 滚动到当前句
+  if (currentIndex >= 0 && currentIndex < sentences.length) {
+    const el2 = document.getElementById(`sent-${currentIndex}`);
+    if (el2) {
+      if (mode === 'slide') el2.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      else el2.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
+  closePanel('font');
+}
+
+// 滑动切句绑定（只绑一次）
+let swipeBound = false;
+function bindReaderSwipe() {
+  if (swipeBound) return;
+  swipeBound = true;
+  const content = document.getElementById('readerText');
+  let startX = 0, startY = 0, moved = false;
+  
+  content.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    moved = false;
+  });
+  
+  content.addEventListener('touchmove', () => { moved = true; });
+  
+  content.addEventListener('touchend', (e) => {
+    if (!moved) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (pageMode === 'slide' && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) nextSentence();
+      else prevSentence();
+    }
+  });
 }
 
 // ==================== 背单词逻辑 ====================
@@ -839,7 +931,6 @@ async function speakWord() {
   await speak(word, 'vocab');
 }
 
-// 智能导入词库：支持 2 列（单词+释义）或 3 列（单词+音标+释义）
 function importVocab(input) {
   const file = input.files[0];
   if (!file) return;
@@ -1031,6 +1122,7 @@ function goTo(pageId) {
   if (pageId === 'vocab') renderVocab();
   if (pageId === 'spell') { initSpell(); }
   if (pageId === 'stats') renderStats();
+  if (pageId === 'reader') { initReader(); bindReaderSwipe(); }
   if (pageId === 'settings') { 
     document.getElementById('apiKeyInput').value = MIMO_CONFIG.apiKey; 
     updateVoiceStatus();
@@ -1043,14 +1135,17 @@ function goTo(pageId) {
   }
 }
 
-// 日历与今日任务
+// ==================== 初始化 ====================
+function initReader() {
+  if (sentences.length > 0) applyPageMode();
+}
+
 const now = new Date();
 document.getElementById('todayDay').textContent = now.getDate();
 const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 const weekNames = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
 document.getElementById('todayMonth').textContent = `${monthNames[now.getMonth()]} ${weekNames[now.getDay()]}`;
 
-// 加载已保存的字体
 const savedFont = localStorage.getItem('custom_font');
 if (savedFont) applyFont(savedFont, localStorage.getItem('custom_font_name') || '');
 
