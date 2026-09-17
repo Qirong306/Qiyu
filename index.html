@@ -221,9 +221,9 @@
       </div>
       <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
       <div class="control-row">
-        <div class="control-btn" onclick="prevSentence()">&lt;</div>
+        <div class="control-btn" onclick="prevSentence()">◀</div>
         <div class="control-btn play-btn" id="playBtn" onclick="togglePlay()">■</div>
-        <div class="control-btn" onclick="nextSentence()">&gt;</div>
+        <div class="control-btn" onclick="nextSentence()">▶</div>
       </div>
       <div class="bottom-menu">
         <div class="icon-btn" onclick="openPanel('catalog')">目录</div>
@@ -244,13 +244,13 @@
     </div>
     <div class="settings-group">
       <label class="settings-label">听书声音样本</label>
-      <input type="file" id="readVoiceFile" accept="audio/*" style="display:none" onchange="uploadVoice('reading', this)">
+      <input type="file" id="readVoiceFile" accept=".mp3,.wav,.m4a,.aac,.ogg" style="display:none" onchange="uploadVoice('reading', this)">
       <button class="settings-btn secondary" onclick="document.getElementById('readVoiceFile').click()">选择文件上传</button>
       <div class="settings-status" id="readVoiceStatus">未上传，默认使用预置音色</div>
     </div>
     <div class="settings-group">
       <label class="settings-label">背单词声音样本</label>
-      <input type="file" id="vocabVoiceFile" accept="audio/*" style="display:none" onchange="uploadVoice('vocab', this)">
+      <input type="file" id="vocabVoiceFile" accept=".mp3,.wav,.m4a,.aac,.ogg" style="display:none" onchange="uploadVoice('vocab', this)">
       <button class="settings-btn secondary" onclick="document.getElementById('vocabVoiceFile').click()">选择文件上传</button>
       <div class="settings-status" id="vocabVoiceStatus">未上传，默认使用预置音色</div>
     </div>
@@ -273,7 +273,7 @@
   <!-- 背单词页面 -->
   <div id="vocab" class="page vocab-view">
     <div class="text-btn" onclick="goTo('desktop')" style="margin-bottom:20px;">返回</div>
-    <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+    <div style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
       <input type="file" id="vocabFile" accept=".txt,.csv" style="display:none" onchange="importVocab(this)">
       <button class="settings-btn secondary" onclick="document.getElementById('vocabFile').click()">导入词库</button>
       <button class="settings-btn secondary" onclick="resetVocab()">重置进度</button>
@@ -414,6 +414,10 @@ let MIMO_CONFIG = {
   voiceSamples: {
     reading: localStorage.getItem('voice_reading') || '',
     vocab: localStorage.getItem('voice_vocab') || ''
+  },
+  voiceMime: {
+    reading: localStorage.getItem('voice_reading_mime') || 'audio/mpeg',
+    vocab: localStorage.getItem('voice_vocab_mime') || 'audio/mpeg'
   }
 };
 
@@ -488,7 +492,6 @@ function renderShelf() {
   });
 }
 
-// 智能解码：自动识别 GBK / UTF-8
 function decodeText(arrayBuffer) {
   const encodings = ['utf-8', 'gbk', 'gb18030', 'big5'];
   let best = '';
@@ -532,7 +535,6 @@ function importBook(input) {
     books.push(book);
     localStorage.setItem('books_data', JSON.stringify(books));
     
-    // 先切回书架页，再刷新列表
     goTo('shelf');
     renderShelf();
     alert(`《${book.name}》导入成功，共 ${text.length} 字`);
@@ -541,7 +543,6 @@ function importBook(input) {
   input.value = '';
 }
 
-// 分段渲染，避免大文件卡死
 function openBook(index) {
   currentBook = index;
   const book = books[index];
@@ -573,7 +574,8 @@ function openBook(index) {
 async function speak(text, scene = 'reading') {
   if (!MIMO_CONFIG.apiKey) { console.warn('请先在设置页填入 MiMo API Key'); return; }
   const sample = MIMO_CONFIG.voiceSamples[scene];
-  const voiceParam = sample ? `data:audio/wav;base64,${sample}` : 'qi_yu_0306';
+  const mime = (MIMO_CONFIG.voiceMime && MIMO_CONFIG.voiceMime[scene]) || 'audio/mpeg';
+  const voiceParam = sample ? `data:${mime};base64,${sample}` : 'qi_yu_0306';
   try {
     const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
       method: 'POST',
@@ -612,18 +614,38 @@ function saveApiKey() {
 async function uploadVoice(scene, input) {
   const file = input.files[0];
   if (!file) return;
+
+  const allowedExts = ['mp3', 'wav', 'm4a', 'aac', 'ogg'];
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (!allowedExts.includes(ext)) {
+    alert('仅支持 mp3 / wav / m4a / aac / ogg 格式的音频');
+    return;
+  }
   if (file.size > 10 * 1024 * 1024) { alert('音频文件不能超过 10MB'); return; }
+
   const reader = new FileReader();
   reader.onload = () => {
     const base64 = reader.result.split(',')[1];
+
+    let mime = 'audio/mpeg';
+    if (ext === 'wav') mime = 'audio/wav';
+    if (ext === 'm4a') mime = 'audio/mp4';
+    if (ext === 'aac') mime = 'audio/aac';
+    if (ext === 'ogg') mime = 'audio/ogg';
+
     MIMO_CONFIG.voiceSamples[scene] = base64;
+    MIMO_CONFIG.voiceMime[scene] = mime;
+
     localStorage.setItem(scene === 'reading' ? 'voice_reading' : 'voice_vocab', base64);
+    localStorage.setItem(scene === 'reading' ? 'voice_reading_mime' : 'voice_vocab_mime', mime);
+
     const statusId = scene === 'reading' ? 'readVoiceStatus' : 'vocabVoiceStatus';
-    document.getElementById(statusId).textContent = '已上传（' + (file.size / 1024).toFixed(1) + ' KB）';
+    document.getElementById(statusId).textContent = `已上传（${(file.size/1024).toFixed(1)} KB，${mime}）`;
     document.getElementById(statusId).className = 'settings-status success';
     updateVoiceStatus();
   };
   reader.readAsDataURL(file);
+  input.value = '';
 }
 
 function updateVoiceStatus() {
@@ -714,7 +736,7 @@ async function nextSentence() {
 function prevSentence() { if (currentIndex > 0) { currentIndex--; updateHighlight(); } }
 function togglePlay() {
   isPlaying = !isPlaying;
-  document.getElementById('playBtn').textContent = isPlaying ? '||' : '■';
+  document.getElementById('playBtn').textContent = isPlaying ? '❚❚' : '■';
   if (isPlaying && currentIndex === -1) nextSentence();
 }
 
@@ -817,28 +839,36 @@ async function speakWord() {
   await speak(word, 'vocab');
 }
 
+// 智能导入词库：支持 2 列（单词+释义）或 3 列（单词+音标+释义）
 function importVocab(input) {
   const file = input.files[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = (e) => {
-    const text = e.target.result;
+    const arrayBuffer = e.target.result;
+    const text = decodeText(arrayBuffer);
     const lines = text.split('\n').map(l => l.trim()).filter(l => l);
     const newList = [];
+    
     for (const line of lines) {
-      const parts = line.split(/[,|]/).map(s => s.trim());
-      if (parts.length >= 2) {
+      const parts = line.split(/[,|\t]/).map(s => s.trim()).filter(s => s);
+      if (parts.length < 2) continue;
+      
+      if (parts.length === 2) {
+        newList.push({ word: parts[0], phonetic: '', meaning: parts[1] });
+      } else {
         newList.push({ word: parts[0], phonetic: parts[1] || '', meaning: parts[2] || parts[1] || '' });
       }
     }
-    if (newList.length === 0) { alert('没有解析到有效单词，请检查文件格式'); return; }
+    
+    if (newList.length === 0) { alert('没有解析到有效单词，请检查文件格式（每行至少要有单词和释义）'); return; }
     vocabList = newList; vocabIndex = 0;
     localStorage.setItem('vocab_list', JSON.stringify(vocabList));
     localStorage.setItem('vocab_index', 0);
     renderVocab();
     alert(`成功导入 ${newList.length} 个单词`);
   };
-  reader.readAsText(file);
+  reader.readAsArrayBuffer(file);
   input.value = '';
 }
 
