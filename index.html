@@ -94,6 +94,18 @@
     .vocab-actions span { cursor: pointer; padding: 8px; }
     .vocab-stats { font-size: 12px; color: #888; text-align: center; margin-top: 20px; }
 
+    /* --- 拼写练习 --- */
+    .spell-view { padding: 30px 20px; }
+    .spell-card { background: #fff; border-radius: 20px; padding: 40px 20px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.04); margin-bottom: 20px; min-height: 220px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .spell-meaning { font-size: 20px; color: #444; line-height: 1.6; }
+    .spell-input { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 12px; font-size: 18px; text-align: center; margin-top: 30px; outline: none; font-family: inherit; }
+    .spell-input:focus { border-color: #1c1c1e; }
+    .spell-feedback { margin-top: 16px; font-size: 14px; min-height: 20px; }
+    .spell-feedback.correct { color: #2e7d32; }
+    .spell-feedback.wrong { color: #c62828; }
+    .spell-btn-row { display: flex; gap: 12px; margin-top: 20px; }
+    .spell-btn-row .vocab-btn { flex: 1; margin-top: 0; }
+
     /* --- 统计页 --- */
     .stats-view { padding: 30px 20px 100px 20px; background: #e8e4d9; position: relative; }
     .stats-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
@@ -265,6 +277,7 @@
       <input type="file" id="vocabFile" accept=".txt,.csv" style="display:none" onchange="importVocab(this)">
       <button class="settings-btn secondary" onclick="document.getElementById('vocabFile').click()">导入词库</button>
       <button class="settings-btn secondary" onclick="resetVocab()">重置进度</button>
+      <button class="settings-btn secondary" onclick="goTo('spell')">拼写练习</button>
     </div>
     <div class="vocab-card">
       <div class="vocab-word" id="vocabWord">Hello</div>
@@ -278,6 +291,21 @@
       <span onclick="nextVocab()">下一个 &gt;</span>
     </div>
     <div class="vocab-stats" id="vocabStats"></div>
+  </div>
+
+  <!-- 拼写练习页面 -->
+  <div id="spell" class="page spell-view">
+    <div class="text-btn" onclick="goTo('vocab')" style="margin-bottom:20px;">返回</div>
+    <div class="spell-card">
+      <div class="spell-meaning" id="spellMeaning">加载中...</div>
+      <input class="spell-input" id="spellInput" type="text" placeholder="输入英文单词" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <div class="spell-feedback" id="spellFeedback"></div>
+    </div>
+    <div class="spell-btn-row">
+      <button class="vocab-btn" onclick="checkSpell()">提交</button>
+      <button class="vocab-btn" style="background:#666;" onclick="nextSpell()">下一个</button>
+    </div>
+    <div class="vocab-stats" id="spellStats"></div>
   </div>
 
   <!-- 统计页 -->
@@ -420,11 +448,9 @@ function renderShelf() {
   books.forEach((book, index) => {
     const div = document.createElement('div');
     div.className = 'book-item';
-    
     let pressTimer = null;
     let isLongPress = false;
 
-    // 启动长按计时
     const startPress = () => {
       isLongPress = false;
       pressTimer = setTimeout(() => {
@@ -436,22 +462,12 @@ function renderShelf() {
         }
       }, 600);
     };
-
-    // 取消长按
-    const cancelPress = () => {
-      if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
-    };
-
-    // 松开时，如果不是长按，就进入阅读
-    const handleClick = () => {
-      if (!isLongPress) openBook(index);
-      isLongPress = false;
-    };
+    const cancelPress = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } };
+    const handleClick = () => { if (!isLongPress) openBook(index); isLongPress = false; };
 
     div.addEventListener('touchstart', startPress);
-    div.addEventListener('touchend', (e) => { cancelPress(); handleClick(); });
+    div.addEventListener('touchend', () => { cancelPress(); handleClick(); });
     div.addEventListener('touchmove', cancelPress);
-
     div.addEventListener('mousedown', startPress);
     div.addEventListener('mouseup', () => { cancelPress(); handleClick(); });
     div.addEventListener('mouseleave', cancelPress);
@@ -498,17 +514,38 @@ function importBook(input) {
   input.value = '';
 }
 
+// 关键修复：分段渲染，避免大文件卡死
 function openBook(index) {
   currentBook = index;
   const book = books[index];
+  
+  // 如果内容太大，先只切分前 N 段，或者异步切分
+  // 这里采用异步分块切分，避免主线程卡顿
+  const fullText = book.content;
+  
+  // 显示加载提示
   const container = document.getElementById('readerText');
-  // 按句号/问号/感叹号/换行切分
-  sentences = book.content.split(/(?<=[。！？\n])/).filter(s => s.trim().length > 0);
-  container.innerHTML = sentences.map((s, i) => `<p id="sent-${i}">${s.trim()}</p>`).join('');
-  currentIndex = book.lastIndex || -1;
-  if (currentIndex >= sentences.length) currentIndex = -1;
-  updateHighlight();
+  container.innerHTML = '<p style="color:#888;">加载中，请稍候...</p>';
   goTo('reader');
+  
+  // 用 requestAnimationFrame 或 setTimeout 让浏览器有机会重绘
+  setTimeout(() => {
+    sentences = fullText.split(/(?<=[。！？\n])/).filter(s => s.trim().length > 0);
+    currentIndex = book.lastIndex || -1;
+    if (currentIndex >= sentences.length) currentIndex = -1;
+    
+    // 只渲染当前段落附近 200 段，避免 DOM 爆炸
+    const renderStart = Math.max(0, currentIndex - 50);
+    const renderEnd = Math.min(sentences.length, currentIndex + 150);
+    const displayText = sentences.slice(renderStart, renderEnd);
+    
+    container.innerHTML = displayText.map((s, i) => {
+      const realIndex = renderStart + i;
+      return `<p id="sent-${realIndex}">${s.trim()}</p>`;
+    }).join('');
+    
+    updateHighlight();
+  }, 50);
 }
 
 // ==================== MiMo TTS 核心函数 ====================
@@ -606,7 +643,7 @@ function applyFont(dataUrl, name) {
       font-family: 'CustomUserFont';
       src: url('${dataUrl}');
     }
-    body, .reader-content, .vocab-word, .widget-title, .stats-title, .book-name, .settings-label, .panel-title, .option-item {
+    body, .reader-content, .vocab-word, .widget-title, .stats-title, .book-name, .settings-label, .panel-title, .option-item, .spell-meaning, .spell-input {
       font-family: 'CustomUserFont', -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif !important;
     }
   `;
@@ -636,7 +673,6 @@ function updateHighlight() {
     document.getElementById('catalogPercent').textContent = Math.round(((currentIndex + 1) / sentences.length) * 100) + '%';
     document.getElementById('catalogPage').textContent = `${currentIndex + 1} / ${sentences.length}`;
     document.getElementById('catalogSlider').value = Math.round(((currentIndex + 1) / sentences.length) * 100);
-    // 保存阅读进度
     if (currentBook !== null && books[currentBook]) {
       books[currentBook].lastIndex = currentIndex;
       books[currentBook].progress = Math.round(((currentIndex + 1) / sentences.length) * 100) + '%';
@@ -649,7 +685,7 @@ async function nextSentence() {
   if (currentIndex < sentences.length - 1) {
     currentIndex++; updateHighlight();
     recordStat('readTime', 1);
-    recordStat('readWords', 10);
+    recordStat('readWords', sentences[currentIndex].length);
     if (isPlaying) { await speak(sentences[currentIndex], 'reading'); if (isPlaying) nextSentence(); }
   } else { isPlaying = false; document.getElementById('playBtn').textContent = '■'; }
 }
@@ -792,6 +828,50 @@ function resetVocab() {
   renderVocab();
 }
 
+// ==================== 拼写练习逻辑 ====================
+let spellIndex = 0;
+
+function initSpell() {
+  // 从当前 vocabIndex 开始
+  spellIndex = vocabIndex;
+  renderSpell();
+}
+
+function renderSpell() {
+  if (vocabList.length === 0) return;
+  const item = vocabList[spellIndex];
+  document.getElementById('spellMeaning').textContent = item.meaning || item.phonetic || '（无释义）';
+  document.getElementById('spellInput').value = '';
+  document.getElementById('spellFeedback').textContent = '';
+  document.getElementById('spellStats').textContent = `进度：${spellIndex + 1} / ${vocabList.length}`;
+  document.getElementById('spellInput').focus();
+}
+
+function checkSpell() {
+  const input = document.getElementById('spellInput').value.trim();
+  const correct = vocabList[spellIndex].word.trim();
+  const feedback = document.getElementById('spellFeedback');
+  if (!input) { feedback.textContent = '请输入单词'; feedback.className = 'spell-feedback'; return; }
+  if (input.toLowerCase() === correct.toLowerCase()) {
+    feedback.textContent = '✓ 正确！';
+    feedback.className = 'spell-feedback correct';
+  } else {
+    feedback.textContent = `✗ 错误，正确答案是：${correct}`;
+    feedback.className = 'spell-feedback wrong';
+  }
+}
+
+function nextSpell() {
+  if (spellIndex < vocabList.length - 1) {
+    spellIndex++;
+    recordStat('vocabCount', 1);
+    renderSpell();
+  } else {
+    document.getElementById('spellFeedback').textContent = '全部完成！';
+    document.getElementById('spellFeedback').className = 'spell-feedback correct';
+  }
+}
+
 // ==================== 统计页逻辑 ====================
 let currentStatsTab = 'day';
 function switchStatsTab(tab, el) {
@@ -899,6 +979,7 @@ function goTo(pageId) {
   document.getElementById(pageId).classList.add('active');
   if (pageId === 'shelf') renderShelf();
   if (pageId === 'vocab') renderVocab();
+  if (pageId === 'spell') { initSpell(); }
   if (pageId === 'stats') renderStats();
   if (pageId === 'settings') { 
     document.getElementById('apiKeyInput').value = MIMO_CONFIG.apiKey; 
