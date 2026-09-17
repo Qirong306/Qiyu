@@ -488,13 +488,37 @@ function renderShelf() {
   });
 }
 
+// 智能解码：自动识别 GBK / UTF-8
+function decodeText(arrayBuffer) {
+  const encodings = ['utf-8', 'gbk', 'gb18030', 'big5'];
+  let best = '';
+  let bestScore = -1;
+  for (const enc of encodings) {
+    try {
+      const decoder = new TextDecoder(enc, { fatal: false });
+      const text = decoder.decode(arrayBuffer);
+      const badCount = (text.match(/\uFFFD/g) || []).length;
+      const score = -badCount;
+      if (score > bestScore) {
+        bestScore = score;
+        best = text;
+      }
+      if (badCount === 0) return text;
+    } catch(e) {}
+  }
+  return best;
+}
+
 function importBook(input) {
   const file = input.files[0];
   if (!file) return;
   if (!file.name.endsWith('.txt')) { alert('目前仅支持 TXT 文件'); return; }
+  
   const reader = new FileReader();
   reader.onload = (e) => {
-    const text = e.target.result;
+    const arrayBuffer = e.target.result;
+    const text = decodeText(arrayBuffer);
+    
     const now = new Date();
     const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
     const book = {
@@ -507,34 +531,31 @@ function importBook(input) {
     };
     books.push(book);
     localStorage.setItem('books_data', JSON.stringify(books));
+    
+    // 先切回书架页，再刷新列表
+    goTo('shelf');
     renderShelf();
-    alert(`《${book.name}》导入成功`);
+    alert(`《${book.name}》导入成功，共 ${text.length} 字`);
   };
-  reader.readAsText(file);
+  reader.readAsArrayBuffer(file);
   input.value = '';
 }
 
-// 关键修复：分段渲染，避免大文件卡死
+// 分段渲染，避免大文件卡死
 function openBook(index) {
   currentBook = index;
   const book = books[index];
-  
-  // 如果内容太大，先只切分前 N 段，或者异步切分
-  // 这里采用异步分块切分，避免主线程卡顿
   const fullText = book.content;
   
-  // 显示加载提示
   const container = document.getElementById('readerText');
   container.innerHTML = '<p style="color:#888;">加载中，请稍候...</p>';
   goTo('reader');
   
-  // 用 requestAnimationFrame 或 setTimeout 让浏览器有机会重绘
   setTimeout(() => {
     sentences = fullText.split(/(?<=[。！？\n])/).filter(s => s.trim().length > 0);
     currentIndex = book.lastIndex || -1;
     if (currentIndex >= sentences.length) currentIndex = -1;
     
-    // 只渲染当前段落附近 200 段，避免 DOM 爆炸
     const renderStart = Math.max(0, currentIndex - 50);
     const renderEnd = Math.min(sentences.length, currentIndex + 150);
     const displayText = sentences.slice(renderStart, renderEnd);
@@ -832,7 +853,6 @@ function resetVocab() {
 let spellIndex = 0;
 
 function initSpell() {
-  // 从当前 vocabIndex 开始
   spellIndex = vocabIndex;
   renderSpell();
 }
