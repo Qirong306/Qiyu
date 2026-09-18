@@ -6,7 +6,14 @@
 <title>个人学习空间</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: -apple-system, "PingFang SC", sans-serif; background: #f5f4f0; color: #2c2c2c; height: 100vh; overflow: hidden; }
+body {
+  font-family: "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+  background: #f5f4f0; color: #2c2c2c; height: 100vh; overflow: hidden;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
 .app { width: 100%; max-width: 420px; height: 100vh; margin: 0 auto; position: relative; background: #f5f4f0; overflow: hidden; }
 .page { display: none; height: 100%; overflow-y: auto; }
 .page.active { display: block; }
@@ -25,7 +32,7 @@ body { font-family: -apple-system, "PingFang SC", sans-serif; background: #f5f4f
 .w-title { font-size: 16px; font-weight: 600; }
 .w-desc { font-size: 12px; color: #888; margin-top: 4px; }
 .w-small { grid-column: span 1; text-align: center; padding: 16px 8px; }
-.w-small .t { font-size: 12px; font-weight: 600; margin-top: 4px; }
+.w-small .t { font-size: 14px; font-weight: 600; margin-top: 4px; }
 
 /* 书架 */
 .shelf { padding: 20px; }
@@ -49,21 +56,23 @@ body { font-family: -apple-system, "PingFang SC", sans-serif; background: #f5f4f
 
 /* 翻页容器 */
 .page-wrap { flex: 1; overflow: hidden; position: relative; }
-.page-track { display: flex; height: 100%; transition: transform 0.25s ease; }
-.page-track p {
+.page-track { display: flex; height: 100%; transition: transform 0.22s ease; will-change: transform; }
+.page-item {
   min-width: 100%; width: 100%; flex-shrink: 0;
   padding: 20px 32px; box-sizing: border-box;
-  font-family: "Songti SC", "Times New Roman", serif;
   font-size: 18px; line-height: 1.9; text-align: justify;
-  text-indent: 2em; overflow-y: auto;
+  overflow: hidden;
+  display: flex; flex-direction: column; gap: 1.2em;
 }
+.page-item p { text-indent: 2em; margin: 0; }
 
 /* 滚动模式 */
 .scroll-mode { overflow-y: auto !important; padding: 20px 32px 160px 32px !important; }
-.scroll-mode p { padding: 0 !important; min-width: auto !important; width: auto !important; margin-bottom: 1.2em; overflow: visible !important; }
-.scroll-mode p.active { background: rgba(200, 180, 140, 0.3); border-radius: 4px; }
+.scroll-mode .page-item { display: block !important; padding: 0 !important; min-width: auto !important; width: auto !important; }
+.scroll-mode .page-item p { margin-bottom: 1.2em; }
+.scroll-mode .page-item p.active { background: rgba(200, 180, 140, 0.3); border-radius: 4px; }
 
-.reader-bottom { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.5); padding: 12px 20px 20px; z-index: 10; transform: translateY(100%); opacity: 0; pointer-events: none; transition: all 0.3s; }
+.reader-bottom { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.5); padding: 12px 20px 24px; z-index: 10; transform: translateY(100%); opacity: 0; pointer-events: none; transition: transform 0.25s ease, opacity 0.25s ease; }
 .reader-bottom.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
 .progress-row { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-bottom: 8px; }
 .progress-bar { width: 100%; height: 2px; background: rgba(0,0,0,0.1); border-radius: 1px; position: relative; margin-bottom: 16px; }
@@ -73,7 +82,7 @@ body { font-family: -apple-system, "PingFang SC", sans-serif; background: #f5f4f
 .c-btn:active { background: rgba(0,0,0,0.1); }
 .c-btn.play { width: 56px; height: 56px; font-size: 22px; }
 .bottom-menu { display: flex; justify-content: space-around; margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.06); }
-.bottom-menu .icon { font-size: 16px; color: #666; cursor: pointer; padding: 8px; }
+.bottom-menu .icon { font-size: 15px; color: #666; cursor: pointer; padding: 8px; }
 
 /* 设置 */
 .settings { padding: 30px 20px; }
@@ -123,7 +132,7 @@ body { font-family: -apple-system, "PingFang SC", sans-serif; background: #f5f4f
 /* 弹窗 */
 .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 100; display: none; align-items: flex-end; }
 .overlay.active { display: flex; }
-.panel { width: 100%; background: #f5f4f0; border-radius: 20px 20px 0 0; padding: 20px; transform: translateY(100%); transition: transform 0.3s; }
+.panel { width: 100%; background: #f5f4f0; border-radius: 20px 20px 0 0; padding: 20px 20px 40px; transform: translateY(100%); transition: transform 0.25s ease; max-height: 70vh; overflow-y: auto; }
 .overlay.active .panel { transform: translateY(0); }
 .panel-title { text-align: center; font-size: 14px; color: #888; margin-bottom: 20px; }
 .opt-grid { display: grid; gap: 12px; margin-bottom: 20px; }
@@ -133,7 +142,8 @@ body { font-family: -apple-system, "PingFang SC", sans-serif; background: #f5f4f
 .color-grid { grid-template-columns: repeat(4, 1fr); }
 .color-item { height: 50px; border-radius: 12px; cursor: pointer; border: 2px solid transparent; }
 .slider-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; font-size: 14px; }
-.slider-row input { width: 60%; }
+.slider-row input[type=range] { width: 60%; }
+.slider-row .val { font-size: 12px; color: #888; min-width: 32px; text-align: right; }
 </style>
 </head>
 <body>
@@ -143,7 +153,7 @@ body { font-family: -apple-system, "PingFang SC", sans-serif; background: #f5f4f
 <div id="desktop" class="page active desktop">
   <div class="grid">
     <div class="w w-large">
-      <div><div class="day" id="day">17</div><div class="info" id="month">9月 星期四</div></div>
+      <div><div class="day" id="day">18</div><div class="info" id="month">9月 星期五</div></div>
       <div class="tag" id="task" onclick="openPanel('task')">今日任务：背 20 个单词</div>
     </div>
     <div class="w w-medium" onclick="goTo('vocab')">
@@ -172,7 +182,7 @@ body { font-family: -apple-system, "PingFang SC", sans-serif; background: #f5f4f
 <div id="reader" class="page reader">
   <div class="reader-top">
     <div class="text-btn" onclick="goTo('shelf')">返回</div>
-    <div class="icon" onclick="toggleAudioBar()">听</div>
+    <div class="icon" id="listenBtn" onclick="toggleAudioBar()">听</div>
   </div>
   <div class="page-wrap" id="pageWrap">
     <div class="page-track" id="pageTrack"></div>
@@ -295,7 +305,7 @@ body { font-family: -apple-system, "PingFang SC", sans-serif; background: #f5f4f
 <div id="panel-catalog" class="overlay" onclick="closePanel('catalog')">
   <div class="panel" onclick="event.stopPropagation()">
     <div class="panel-title">目录</div>
-    <div class="slider-row"><span>进度 <span id="catalogPercent">0%</span></span><input type="range" id="catalogSlider" min="0" max="100" value="0" oninput="jumpToPercent(this.value)"><span id="catalogPage">0/0</span></div>
+    <div class="slider-row"><span>进度</span><input type="range" id="catalogSlider" min="0" max="100" value="0" oninput="onCatalogInput(this.value)" onchange="onCatalogChange(this.value)"><span class="val" id="catalogPercent">0%</span></div>
     <div class="opt-row">
       <div class="opt" onclick="jumpToPercent(0)">最前</div>
       <div class="opt" onclick="jumpToPercent(50)">中间</div>
@@ -319,8 +329,8 @@ body { font-family: -apple-system, "PingFang SC", sans-serif; background: #f5f4f
 <div id="panel-font" class="overlay" onclick="closePanel('font')">
   <div class="panel" onclick="event.stopPropagation()">
     <div class="panel-title">字体与排版</div>
-    <div class="slider-row"><span>字号</span><input type="range" min="14" max="32" value="18" oninput="setFontSize(this.value)"></div>
-    <div class="slider-row"><span>行距</span><input type="range" min="1.2" max="2.5" step="0.1" value="1.9" oninput="setLineHeight(this.value)"></div>
+    <div class="slider-row"><span>字号</span><input type="range" min="14" max="32" value="18" oninput="setFontSize(this.value)"><span class="val" id="fontSizeVal">18</span></div>
+    <div class="slider-row"><span>行距</span><input type="range" min="1.2" max="2.5" step="0.1" value="1.9" oninput="setLineHeight(this.value)"><span class="val" id="lineHeightVal">1.9</span></div>
     <div class="opt-row">
       <div class="opt selected" onclick="setPageMode('slide', this)">左右滑动</div>
       <div class="opt" onclick="setPageMode('flip', this)">仿真翻页</div>
@@ -341,7 +351,6 @@ let MIMO_CONFIG = {
   voiceMime: { reading: 'audio/mpeg', vocab: 'audio/mpeg' }
 };
 
-// 启动时加载远程音频
 async function loadVoiceSamples() {
   for (const scene of ['reading', 'vocab']) {
     const url = MIMO_CONFIG.voiceUrls[scene];
@@ -453,31 +462,41 @@ function importBook(input) {
   input.value = '';
 }
 
-// ==================== 阅读器核心（重写版） ====================
+// ==================== 阅读器核心 ====================
 let sentences = [];
-let currentIndex = -1;
+let currentIndex = 0;
 let isPlaying = false;
-let pageMode = 'slide'; // slide / flip / roll
+let pageMode = 'slide';
 let currentPage = 0;
 let totalPages = 1;
 let audioCache = {};
+let fontSize = 18;
+let lineHeight = 1.9;
 
 function openBook(index) {
   currentBook = index;
   const book = books[index];
-  const container = document.getElementById('pageTrack');
-  container.innerHTML = '<p style="color:#888;">加载中...</p>';
+  const track = document.getElementById('pageTrack');
+  track.innerHTML = '<div class="page-item"><p style="color:#888;">加载中...</p></div>';
   goTo('reader');
   setTimeout(() => {
     sentences = book.content.split(/(?<=[。！？\n])/).filter(s => s.trim().length > 0);
-    currentIndex = book.lastIndex || -1;
-    if (currentIndex >= sentences.length) currentIndex = -1;
-    currentPage = Math.floor(Math.max(currentIndex, 0) / 1);
+    currentIndex = book.lastIndex || 0;
+    if (currentIndex >= sentences.length) currentIndex = 0;
+    currentPage = 0;
     applyPageMode();
   }, 30);
 }
 
-// 应用模式
+// 计算一页能放多少段
+function computePageSize() {
+  const wrap = document.getElementById('pageWrap');
+  const h = wrap.clientHeight - 40; // padding
+  const pHeight = fontSize * lineHeight * 1.6; // 每段大约高度
+  const perPage = Math.max(1, Math.floor(h / pHeight));
+  return perPage;
+}
+
 function applyPageMode() {
   const track = document.getElementById('pageTrack');
   const wrap = document.getElementById('pageWrap');
@@ -485,44 +504,44 @@ function applyPageMode() {
   if (sentences.length === 0) return;
 
   if (pageMode === 'roll') {
-    // 滚动模式
-    track.style.display = 'block';
-    track.style.transform = '';
     track.style.transition = 'none';
+    track.style.transform = '';
     wrap.classList.add('scroll-mode');
-    track.innerHTML = sentences.map((s, i) => `<p id="sent-${i}" style="${i === currentIndex ? 'background:rgba(200,180,140,0.3);border-radius:4px;' : ''}">${s.trim()}</p>`).join('');
+    track.innerHTML = `<div class="page-item">${sentences.map((s, i) => `<p id="sent-${i}">${s.trim()}</p>`).join('')}</div>`;
     if (currentIndex >= 0) {
       const el = document.getElementById('sent-' + currentIndex);
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
     updateProgressRoll();
-  } else {
-    // 翻页模式：一页一句
-    track.style.display = 'flex';
-    wrap.classList.remove('scroll-mode');
-    totalPages = sentences.length;
-    if (currentPage >= totalPages) currentPage = totalPages - 1;
-    if (currentPage < 0) currentPage = 0;
-    track.innerHTML = sentences.map((s, i) =>
-      `<p id="sent-${i}">${s.trim()}</p>`
-    ).join('');
-    moveTrack(false);
-    updateProgressPage();
+    return;
   }
+
+  wrap.classList.remove('scroll-mode');
+  const perPage = computePageSize();
+  totalPages = Math.ceil(sentences.length / perPage);
+  if (currentPage >= totalPages) currentPage = totalPages - 1;
+  if (currentPage < 0) currentPage = 0;
+
+  // 构建所有页
+  const pages = [];
+  for (let i = 0; i < totalPages; i++) {
+    const start = i * perPage;
+    const end = Math.min(start + perPage, sentences.length);
+    const items = sentences.slice(start, end).map((s, j) => `<p id="sent-${start + j}">${s.trim()}</p>`).join('');
+    pages.push(`<div class="page-item">${items}</div>`);
+  }
+  track.innerHTML = pages.join('');
+  track.style.fontSize = fontSize + 'px';
+  track.style.lineHeight = lineHeight;
+  moveTrack(false);
+  updateProgressPage();
 }
 
-// 移动轨道到当前页
 function moveTrack(animate) {
   const track = document.getElementById('pageTrack');
   if (!track) return;
-  track.style.transition = animate ? 'transform 0.25s ease' : 'none';
+  track.style.transition = animate ? 'transform 0.22s ease' : 'none';
   track.style.transform = `translateX(-${currentPage * 100}%)`;
-}
-
-function renderPage() {
-  // 翻页模式下不需要重新渲染，只是移动轨道
-  moveTrack(true);
-  updateProgressPage();
 }
 
 function updateProgressPage() {
@@ -531,10 +550,9 @@ function updateProgressPage() {
   document.getElementById('timeElapsed').textContent = `第 ${currentPage + 1} / ${totalPages} 页`;
   document.getElementById('timeRemaining').textContent = `已读 ${percent}%`;
   document.getElementById('catalogPercent').textContent = percent + '%';
-  document.getElementById('catalogPage').textContent = `${currentPage + 1}/${totalPages}`;
   document.getElementById('catalogSlider').value = percent;
   if (currentBook !== null && books[currentBook]) {
-    books[currentBook].lastIndex = currentPage;
+    books[currentBook].lastIndex = currentIndex;
     books[currentBook].progress = percent + '%';
     localStorage.setItem('books_data', JSON.stringify(books));
   }
@@ -546,17 +564,16 @@ function updateProgressRoll() {
   document.getElementById('timeElapsed').textContent = `已读 ${percent}%`;
   document.getElementById('timeRemaining').textContent = `剩余 ${sentences.length - currentIndex - 1} 句`;
   document.getElementById('catalogPercent').textContent = percent + '%';
-  document.getElementById('catalogPage').textContent = `${currentIndex + 1}/${sentences.length}`;
   document.getElementById('catalogSlider').value = percent;
 }
 
-// 翻页
 function turnPage(dir) {
   if (pageMode === 'roll') return;
   const newPage = currentPage + dir;
   if (newPage < 0 || newPage >= totalPages) return;
   currentPage = newPage;
-  currentIndex = currentPage;
+  const perPage = computePageSize();
+  currentIndex = currentPage * perPage;
   moveTrack(true);
   updateProgressPage();
   if (isPlaying) {
@@ -572,11 +589,10 @@ function turnPage(dir) {
 async function nextSentence() {
   if (pageMode === 'roll') {
     if (currentIndex < sentences.length - 1) {
+      document.querySelectorAll('#pageTrack p').forEach(p => p.classList.remove('active'));
       currentIndex++;
-      // 高亮
-      document.querySelectorAll('#pageTrack p').forEach(p => p.style.background = '');
       const el = document.getElementById('sent-' + currentIndex);
-      if (el) { el.style.background = 'rgba(200,180,140,0.3)'; el.style.borderRadius = '4px'; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      if (el) { el.classList.add('active'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
       recordStat('readTime', 1);
       recordStat('readWords', sentences[currentIndex].length);
       updateProgressRoll();
@@ -593,10 +609,10 @@ async function nextSentence() {
 function prevSentence() {
   if (pageMode === 'roll') {
     if (currentIndex > 0) {
+      document.querySelectorAll('#pageTrack p').forEach(p => p.classList.remove('active'));
       currentIndex--;
-      document.querySelectorAll('#pageTrack p').forEach(p => p.style.background = '');
       const el = document.getElementById('sent-' + currentIndex);
-      if (el) { el.style.background = 'rgba(200,180,140,0.3)'; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      if (el) { el.classList.add('active'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
       updateProgressRoll();
     }
   } else {
@@ -607,7 +623,11 @@ function prevSentence() {
 function togglePlay() {
   isPlaying = !isPlaying;
   document.getElementById('playBtn').textContent = isPlaying ? '❚❚' : '■';
-  if (isPlaying && currentIndex === -1) nextSentence();
+  if (isPlaying) {
+    const perPage = pageMode === 'roll' ? 1 : computePageSize();
+    if (pageMode !== 'roll') currentIndex = currentPage * perPage;
+    nextSentence();
+  }
 }
 
 // 手势
@@ -630,32 +650,6 @@ function bindSwipe() {
 }
 
 // ==================== TTS ====================
-async function prefetchAudio(text, scene) {
-  if (!MIMO_CONFIG.apiKey || audioCache[text]) return;
-  try {
-    const sample = MIMO_CONFIG.voiceSamples[scene];
-    const mime = MIMO_CONFIG.voiceMime[scene] || 'audio/mpeg';
-    const voice = sample ? `data:${mime};base64,${sample}` : 'qi_yu_0306';
-    const resp = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'api-key': MIMO_CONFIG.apiKey, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: MIMO_CONFIG.model,
-        messages: [{ role: 'user', content: '' }, { role: 'assistant', content: text }],
-        audio: { format: 'wav', voice: voice }
-      })
-    });
-    const data = await resp.json();
-    if (!data.choices || !data.choices[0].message.audio) return;
-    const b64 = data.choices[0].message.audio.data;
-    const bytes = atob(b64);
-    const buf = new ArrayBuffer(bytes.length);
-    const u8 = new Uint8Array(buf);
-    for (let i = 0; i < bytes.length; i++) u8[i] = bytes.charCodeAt(i);
-    audioCache[text] = buf;
-  } catch(e) {}
-}
-
 async function speak(text, scene = 'reading') {
   if (!MIMO_CONFIG.apiKey) { console.warn('请先填 API Key'); return; }
   let buf = audioCache[text];
@@ -703,8 +697,14 @@ function saveApiKey() {
 // ==================== 阅读器 UI ====================
 function toggleAudioBar() {
   const bar = document.getElementById('readerAudioBar');
-  bar.classList.toggle('show');
-  document.getElementById('readerBottom').classList.remove('show');
+  const bottom = document.getElementById('readerBottom');
+  if (bar.classList.contains('show')) {
+    bar.classList.remove('show');
+    bottom.classList.remove('show');
+  } else {
+    bar.classList.add('show');
+    bottom.classList.remove('show');
+  }
 }
 function openPanel(t) { document.getElementById('panel-' + t).classList.add('active'); }
 function closePanel(t) { document.getElementById('panel-' + t).classList.remove('active'); }
@@ -714,8 +714,20 @@ function setTheme(bg, tx) {
   document.querySelector('.reader-top').style.color = tx;
   closePanel('theme');
 }
-function setFontSize(v) { document.getElementById('pageTrack').style.fontSize = v + 'px'; }
-function setLineHeight(v) { document.getElementById('pageTrack').style.lineHeight = v; }
+function setFontSize(v) {
+  fontSize = parseInt(v);
+  document.getElementById('fontSizeVal').textContent = v;
+  const track = document.getElementById('pageTrack');
+  if (track) track.style.fontSize = fontSize + 'px';
+  if (pageMode !== 'roll') applyPageMode();
+}
+function setLineHeight(v) {
+  lineHeight = parseFloat(v);
+  document.getElementById('lineHeightVal').textContent = v;
+  const track = document.getElementById('pageTrack');
+  if (track) track.style.lineHeight = lineHeight;
+  if (pageMode !== 'roll') applyPageMode();
+}
 function setPageMode(mode, el) {
   pageMode = mode;
   el.parentNode.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
@@ -723,17 +735,23 @@ function setPageMode(mode, el) {
   applyPageMode();
   closePanel('font');
 }
+function onCatalogInput(v) {
+  document.getElementById('catalogPercent').textContent = v + '%';
+}
+function onCatalogChange(v) {
+  jumpToPercent(parseInt(v));
+}
 function jumpToPercent(v) {
   if (pageMode === 'roll') {
     currentIndex = Math.round((v/100) * (sentences.length - 1));
     applyPageMode();
   } else {
     currentPage = Math.round((v/100) * (totalPages - 1));
-    currentIndex = currentPage;
+    const perPage = computePageSize();
+    currentIndex = currentPage * perPage;
     moveTrack(true);
     updateProgressPage();
   }
-  closePanel('catalog');
 }
 
 // ==================== 背单词 ====================
@@ -850,9 +868,8 @@ renderVocab();
 renderShelf();
 bindSwipe();
 
-// 拦截 reader 进入
-const origGoTo = goTo;
-goTo = function(id) { origGoTo(id); if (id === 'reader') bindSwipe(); };
+// 监听屏幕旋转/尺寸变化，重新分页
+window.addEventListener('resize', () => { if (pageMode !== 'roll' && sentences.length) applyPageMode(); });
 </script>
 </body>
 </html>
